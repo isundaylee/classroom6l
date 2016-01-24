@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    ace-rails-ap (4.0.1)
     actioncable (5.0.0.beta1)
       actionpack (= 5.0.0.beta1)
       celluloid (~> 0.17.2)
@@ -140,6 +141,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.5.0)
     redis (3.2.2)
+    sass (3.4.21)
     spring (1.6.2)
     sprockets (3.5.2)
       concurrent-ruby (~> 1.0)
@@ -172,12 +174,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ace-rails-ap
   byebug
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
   puma
   rails (>= 5.0.0.beta1, < 5.1)
+  sass
   spring
   sqlite3
   turbolinks

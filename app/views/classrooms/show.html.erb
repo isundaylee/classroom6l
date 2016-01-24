@@ -1,7 +1,9 @@
 <h1>Welcome to <%= @classroom.name %></h1>
 
-<p>The current code is: </p>
+<div id="toolbar">
+  <div id="run">Run</div>
+</div>
 
-<pre>
+<div id="editor">
   <%= @classroom.code %>
-</pre>
+</div>

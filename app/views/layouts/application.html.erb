@@ -9,7 +9,7 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   </head>
 
-  <body>
+  <body id="<%= controller_name + '_' + action_name %>">
     <%= yield %>
   </body>
 </html>
