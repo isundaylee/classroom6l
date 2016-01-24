@@ -1,0 +1,10 @@
+<img id="devil" src="http://thebuzzbug.com/wp-content/uploads/2015/08/devil-emoji.png" />
+<h1>Classroom 6.L</h1>
+<div id="overlay"></div>
+
+<%= form_for Classroom.new(name: 'A New Classroom', language: 'python') do |f| %>
+  <%= f.text_field :name %>
+  <%= f.hidden_field :language %>
+  <div id="python">Python</div>
+  <div id="ruby">Ruby</div>
+<% end %>
