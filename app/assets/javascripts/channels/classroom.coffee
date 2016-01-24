@@ -14,11 +14,12 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
         else
           alert('Error: ' + data.payload.error)
       when 'submit_change_result'
-        unless data.payload.success
-          alert('There has been an merging conflict. Your changes to the code would unfortunately have to be reverted ):')
-          window.editor.setValue(data.payload.revert, 1)
+        if data.payload.result != window.editor.getValue()
+          pos = window.editor.session.selection.toJSON()
+          window.editor.setValue(data.payload.result, 1)
+          window.editor.session.selection.fromJSON(pos)
         else
-          console.log('Submission success! ')
+          console.log('Broadcast matches ours! ')
       else
         console.log("Unrecognised message received: " + data)
 

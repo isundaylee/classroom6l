@@ -17,15 +17,14 @@ class ChangeCodeJob < ApplicationJob
       ActionCable.server.broadcast "classroom_#{classroom_id}", {
         type: 'submit_change_result',
         payload: {
-          success: true
+          result: classroom.code
         }
       }
     rescue Merger::CannotMergeException => e
       ActionCable.server.broadcast "classroom_#{classroom_id}", {
         type: 'submit_change_result',
         payload: {
-          success: false,
-          revert: classroom.code
+          result: classroom.code
         }
       }
     end
