@@ -11,6 +11,9 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
         if data.payload.success
           window.appendOutput("The result of your code is: ")
           window.appendOutput(data.payload.stdout)
+          if data.payload.stderr.length > 0
+            window.appendOutput("It generated the following error(s) ):")
+            window.appendOutput(data.payload.stderr)
         else
           alert('Error: ' + data.payload.error)
       when 'submit_change_result'
