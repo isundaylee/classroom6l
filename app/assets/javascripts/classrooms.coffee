@@ -5,12 +5,22 @@
 ready = ->
   if $('body#classrooms_show').length > 0
     window.editor = ace.edit('editor')
-    editor.setTheme('ace/theme/monokai')
-    editor.getSession().setMode('ace/mode/ruby')
+    window.output = ace.edit('output')
+    window.editor.setTheme('ace/theme/monokai')
+    window.editor.getSession().setMode('ace/mode/ruby')
+    window.output.setTheme('ace/theme/monokai')
+    window.output.setOptions
+      readOnly: true,
+      highlightActiveLine: false,
+      highlightGutterLine: false
+
+    window.append_output = (content) ->
+      window.output.setValue(window.output.getValue() + "\n\n" + content, 1)
 
     # Bind the buttons
     $('#run').click ->
-      alert('Gotta run some code. ')
+      window.append_output('Running your code...')
+      App.classroom.run()
 
 $(document).ready(ready)
 $(document).on('page:load', ready)

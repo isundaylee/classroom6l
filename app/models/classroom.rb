@@ -31,9 +31,21 @@ class Classroom < ApplicationRecord
     @code = content
   end
 
+  def language_extension
+    language_profile()[:extension]
+  end
+
+  def language_name
+    language_profile()[:name]
+  end
+
   private
     def save_code
       # Note that we DO wanna save @code even if it is an empty string.
       self.codes.create(content: @code) unless @code.nil?
+    end
+
+    def language_profile
+      SUPPORTED_LANGUAGES[self.language]
     end
 end
