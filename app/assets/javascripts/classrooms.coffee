@@ -13,13 +13,32 @@ ready = ->
       readOnly: true,
       highlightActiveLine: false,
       highlightGutterLine: false
+    window.lastTimeContent = window.editor.getValue()
+    window.lastSentContent = window.editor.getValue()
+    window.silenceCounter = 0
+    window.dirty = false
 
-    window.append_output = (content) ->
+    setInterval ->
+      content = window.editor.getValue()
+      if content == window.lastTimeContent
+        window.silenceCounter += 1
+      else
+        window.silenceCounter = 0
+        window.dirty = true
+      # 1s wait period before update
+      if window.dirty && window.silenceCounter >= 3
+        window.dirty = false
+        App.classroom.submitChange(window.lastSentContent, window.lastTimeContent)
+        window.lastSentContent = window.lastTimeContent
+      window.lastTimeContent = content
+    , 100
+
+    window.appendOutput = (content) ->
       window.output.setValue(window.output.getValue() + "\n\n" + content, 1)
 
     # Bind the buttons
     $('#run').click ->
-      window.append_output('Running your code...')
+      window.appendOutput('Running your code...')
       App.classroom.run()
 
 $(document).ready(ready)

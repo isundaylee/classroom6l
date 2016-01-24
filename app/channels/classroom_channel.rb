@@ -12,4 +12,9 @@ class ClassroomChannel < ApplicationCable::Channel
     classroom_id = data['classroom_id'].to_i
     RunCodeJob.perform_later(classroom_id, Classroom.find(classroom_id).code)
   end
+
+  def submit_change(data)
+    classroom_id = data['classroom_id'].to_i
+    ChangeCodeJob.perform_later(classroom_id, data['previous'], data['updated'])
+  end
 end
