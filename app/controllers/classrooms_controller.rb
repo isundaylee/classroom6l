@@ -2,6 +2,7 @@ class ClassroomsController < ApplicationController
   def show
     @classroom = Classroom.find(params[:id])
     gon.classroom_id = @classroom.id
+    gon.language = @classroom.language
   end
 
   def create

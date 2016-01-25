@@ -7,7 +7,7 @@ ready = ->
     window.editor = ace.edit('editor')
     window.output = ace.edit('output')
     window.editor.setTheme('ace/theme/monokai')
-    window.editor.getSession().setMode('ace/mode/ruby')
+    window.editor.getSession().setMode('ace/mode/' + gon.language)
     window.output.setTheme('ace/theme/monokai')
     window.output.setOptions
       readOnly: true,

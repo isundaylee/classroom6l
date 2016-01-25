@@ -15,4 +15,6 @@
 //= require turbolinks
 //= require ace-rails-ap
 //= require ace/theme-monokai
+//= require ace/mode-python
+//= require ace/mode-ruby
 //= require_tree .
