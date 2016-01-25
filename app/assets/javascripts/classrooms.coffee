@@ -11,7 +11,6 @@ class CodeEditor
 
     @dirtyState =
       dirty: false
-      silenceCounter: 0
       lastSeenContent: @editor.getValue()
     @submitState =
       lastSentContent: @editor.getValue()
@@ -25,14 +24,11 @@ class CodeEditor
     @patchQueue.push(patch)
 
   # Internal methods details from now on
-  checkDirty: ->
+  checkAndSubmitDirty: ->
     content = @editor.getValue()
-    if content == @dirtyState.lastSeenContent
-      @dirtyState.silenceCounter += 1
-    else
-      @dirtyState.silenceCounter = 0
-      @dirtyState.dirty = true
+    @dirtyState.dirty = true if content != @dirtyState.lastSeenContent
     @dirtyState.lastSeenContent = content
+    @submitChanges() if @dirtyState.dirty
 
   updateContent: (newContent) ->
     console.assert(!@dirtyState.dirty, "updateContent() should only be called with a clean buffer. ")
@@ -59,9 +55,8 @@ class CodeEditor
     # TODO: potentially thread unsafe
     @patchQueue = []
 
-    if patchedContent != content
-      @submitChanges()
-      @updateContent(patchedContent)
+    # Do NOT submitChange() here as they are not our changes.
+    @updateContent(patchedContent) if patchedContent != content
 
   submitChanges: ->
     content = @editor.getValue()
@@ -72,9 +67,8 @@ class CodeEditor
     @submitState.lastSentContent = content
 
   pollingLoop: ->
-    @checkDirty()
+    @checkAndSubmitDirty()
     @applyPendingPatches()
-    @submitChanges() if @dirtyState.silenceCounter >= 3 && @dirtyState.dirty
 
     setTimeout =>
       @pollingLoop()
