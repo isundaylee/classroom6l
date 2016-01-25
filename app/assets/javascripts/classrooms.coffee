@@ -72,7 +72,7 @@ class CodeEditor
 
     setTimeout =>
       @pollingLoop()
-    , 100
+    , 50
 
 class OutputDisplay
   constructor: (divId) ->
