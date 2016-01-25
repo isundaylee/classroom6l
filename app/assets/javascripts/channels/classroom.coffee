@@ -13,11 +13,11 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   handleRunResult: (data) ->
     if data.payload.success
-      window.appendOutput("The result of your code is: ")
-      window.appendOutput(data.payload.stdout)
+      window.outputDisplay.append("The result of your code is: ")
+      window.outputDisplay.append(data.payload.stdout)
       if data.payload.stderr.length > 0
-        window.appendOutput("It generated the following error(s) ):")
-        window.appendOutput(data.payload.stderr)
+        window.outputDisplay.append("It generated the following error(s) ):")
+        window.outputDisplay.append(data.payload.stderr)
     else
       alert('Error: ' + data.payload.error)
 

@@ -80,26 +80,31 @@ class CodeEditor
       @pollingLoop()
     , 100
 
-ready = ->
-  if $('body#classrooms_show').length > 0
-    # Set up the editor and output display
-    window.codeEditor = new CodeEditor 'editor'
-    window.output = ace.edit('output')
-    window.output.setTheme('ace/theme/monokai')
-    window.output.setOptions
+class OutputDisplay
+  constructor: (divId) ->
+    @display = ace.edit(divId)
+
+    @display.setTheme('ace/theme/monokai')
+    @display.setOptions
       readOnly: true,
       highlightActiveLine: false,
       highlightGutterLine: false
 
+  append: (content) ->
+    @display.setValue(@display.getValue() + "\n\n" + content, 1)
+
+ready = ->
+  if $('body#classrooms_show').length > 0
+    # Set up the editor and output display
+    window.codeEditor = new CodeEditor 'editor'
+    window.outputDisplay = new OutputDisplay 'output'
+
     # Initialise diff-match-patch
     window.dmp = new diff_match_patch
 
-    window.appendOutput = (content) ->
-      window.output.setValue(window.output.getValue() + "\n\n" + content, 1)
-
     # Bind the buttons
     $('#run').click ->
-      window.appendOutput('Running your code...')
+      window.outputDisplay.append('Running your code...')
       App.classroom.run()
 
 $(document).ready(ready)
