@@ -84,6 +84,8 @@ class OutputDisplay
       highlightActiveLine: false,
       highlightGutterLine: false
 
+    @display.$blockScrolling = Infinity
+
   append: (content) ->
     @display.setValue(@display.getValue() + "\n\n" + content, 1)
 
