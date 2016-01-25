@@ -81,5 +81,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.middleware.use ActionCableProxy
-  config.web_socket_server_url = "ws://6l.jiahao.link"
+  config.action_cable.url = "ws://6l.jiahao.link"
 end

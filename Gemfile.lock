@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/MattWalston/rails_stdout_logging.git
+  revision: 2440cd5cc07c1396dc470b1733a28dad0c269d94
+  specs:
+    rails_stdout_logging (0.0.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -144,7 +150,6 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
-    rails_stdout_logging (0.0.4)
     railties (5.0.0.beta1)
       actionpack (= 5.0.0.beta1)
       activesupport (= 5.0.0.beta1)
@@ -202,7 +207,7 @@ DEPENDENCIES
   pg
   puma
   rails (>= 5.0.0.beta1, < 5.1)
-  rails_stdout_logging
+  rails_stdout_logging!
   rest-client
   sass
   spring
