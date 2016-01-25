@@ -7,29 +7,33 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   received: (data) ->
     switch data.type
-      when 'run_result'
-        if data.payload.success
-          window.appendOutput("The result of your code is: ")
-          window.appendOutput(data.payload.stdout)
-          if data.payload.stderr.length > 0
-            window.appendOutput("It generated the following error(s) ):")
-            window.appendOutput(data.payload.stderr)
-        else
-          alert('Error: ' + data.payload.error)
-      when 'submit_patch_result'
-        if data.payload.success
-          if data.payload.client_id == gon.client_id
-            # Our patch went through
-          else
-            # TODO: apply other's patch
-        else
-          if data.payload.client_id == gon.client_id
-            # TODO: our patch is rejected
-            console.log('Oops. Our patch is rejected. ')
-          else
-            # Other people's patch is rejected.
+      when 'run_result' then @handleRunResult(data)
+      when 'submit_patch_result' then @handleSubmitPatchResult(data)
+      else console.log("Unrecognised message received: " + data)
+
+  handleRunResult: (data) ->
+    if data.payload.success
+      window.appendOutput("The result of your code is: ")
+      window.appendOutput(data.payload.stdout)
+      if data.payload.stderr.length > 0
+        window.appendOutput("It generated the following error(s) ):")
+        window.appendOutput(data.payload.stderr)
+    else
+      alert('Error: ' + data.payload.error)
+
+  handleSubmitPatchResult: (data) ->
+    if data.payload.success
+      if data.payload.client_id == gon.client_id
+        # Yay - our patch went through.
       else
-        console.log("Unrecognised message received: " + data)
+        # We delay updating editor to the recurring function.
+        window.patchQueue.push(data.payload.patch)
+    else
+      if data.payload.client_id == gon.client_id
+        # TODO: our patch is rejected
+        console.log('Oops. Our patch is rejected. ')
+      else
+        # Some poor soul's patch is rejected.
 
   run: ->
     @perform 'run'
