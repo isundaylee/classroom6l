@@ -36,11 +36,36 @@ body#classrooms_show
     top: 60px
     left: 0
     right: 50%
-    bottom: 0
+    bottom: 40px
 
   #output
     position: absolute
     top: 60px
     left: 50%
     right: 0
-    bottom: 0
+    bottom: 40px
+
+  #status_bar
+    position: absolute
+    height: 34px
+    bottom: 0px
+    left: 0
+    right: 0
+    border-top: 6px solid #2F3129
+    background-color: #272822
+
+    .lang
+      font-family: 'Source Sans Pro', sans-serif
+      font-size: 14px
+      font-weight: 300
+      color: #FFF
+      float: right
+      padding: 2px 10px
+      margin: 5px 10px
+      border-radius: 5px
+
+      &.python
+        background-color: darken(#009900, 5)
+
+      &.ruby
+        background-color: darken(#0066ff, 5)
