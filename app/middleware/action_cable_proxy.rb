@@ -1,3 +1,5 @@
+require 'faye/websocket'
+
 class ActionCableProxy
   def initialize(app, options={})
     @app = app
