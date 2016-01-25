@@ -35,6 +35,8 @@ gem 'rails_stdout_logging', github: 'MattWalston/rails_stdout_logging'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'diff_match_patch'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

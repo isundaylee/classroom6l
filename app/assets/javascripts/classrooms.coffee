@@ -4,6 +4,7 @@
 
 ready = ->
   if $('body#classrooms_show').length > 0
+    # Set up the editor and output display
     window.editor = ace.edit('editor')
     window.output = ace.edit('output')
     window.editor.setTheme('ace/theme/monokai')
@@ -13,24 +14,36 @@ ready = ->
       readOnly: true,
       highlightActiveLine: false,
       highlightGutterLine: false
-    window.lastTimeContent = window.editor.getValue()
-    window.lastSentContent = window.editor.getValue()
-    window.silenceCounter = 0
-    window.dirty = false
+
+    # Initialise the code update state
+    window.dirtyState =
+      dirty: false
+      silenceCounter: 0
+      lastSeenContent: window.editor.getValue()
+    window.submitState =
+      lastSentContent: window.editor.getValue()
+
+    # Initialise diff-match-patch
+    window.dmp = new diff_match_patch
 
     setInterval ->
+      # Update the dirty state
       content = window.editor.getValue()
-      if content == window.lastTimeContent
-        window.silenceCounter += 1
+      if content == window.dirtyState.lastSeenContent
+        window.dirtyState.silenceCounter += 1
       else
-        window.silenceCounter = 0
-        window.dirty = true
-      # 1s wait period before update
-      if window.dirty && window.silenceCounter >= 3
-        window.dirty = false
-        App.classroom.submitChange(window.lastSentContent, window.lastTimeContent)
-        window.lastSentContent = window.lastTimeContent
-      window.lastTimeContent = content
+        window.dirtyState.silenceCounter = 0
+        window.dirtyState.dirty = true
+      window.dirtyState.lastSeenContent = content
+
+      # If it has been quiet (300ms)
+      if window.dirtyState.silenceCounter >= 3
+        if window.dirtyState.dirty
+          patches = window.dmp.patch_make(window.submitState.lastSentContent, content)
+          patchText = window.dmp.patch_toText(patches)
+          App.classroom.submitPatch(patchText)
+          window.dirtyState.dirty = false
+          window.submitState.lastSentContent = content
     , 100
 
     window.appendOutput = (content) ->

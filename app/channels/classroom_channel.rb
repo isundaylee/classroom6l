@@ -9,12 +9,13 @@ class ClassroomChannel < ApplicationCable::Channel
   end
 
   def run(data)
-    classroom_id = data['classroom_id'].to_i
+    classroom_id = params['classroom_id'].to_i
     RunCodeJob.perform_later(classroom_id, Classroom.find(classroom_id).code)
   end
 
-  def submit_change(data)
-    classroom_id = data['classroom_id'].to_i
-    ChangeCodeJob.perform_later(classroom_id, data['previous'], data['updated'])
+  def submit_patch(data)
+    classroom_id = params['classroom_id'].to_i
+    client_id = params['client_id']
+    ChangeCodeJob.perform_later(classroom_id, client_id, data['patch'])
   end
 end

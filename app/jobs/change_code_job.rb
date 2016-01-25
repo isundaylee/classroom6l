@@ -6,25 +6,31 @@ class ChangeCodeJob < ApplicationJob
 
   MERGER = NaiveMerger
 
-  def perform(classroom_id, previous, updated)
+  def perform(classroom_id, client_id, patch_text)
     classroom = Classroom.find(classroom_id)
-    merger = MERGER.new
 
-    begin
-      classroom.code = merger.merge(previous, classroom.code, updated)
+    dmp = DiffMatchPatch.new
+    patches = dmp.patch_fromText(patch_text)
+    new_code, success = dmp.patch_apply(patches, classroom.code)
+
+    if success.all?
+      classroom.code = new_code
       classroom.save!
 
       ActionCable.server.broadcast "classroom_#{classroom_id}", {
-        type: 'submit_change_result',
+        type: 'submit_patch_result',
         payload: {
-          result: classroom.code
+          success: true,
+          client_id: client_id,
+          patch: patch_text
         }
       }
-    rescue Merger::CannotMergeException => e
+    else
       ActionCable.server.broadcast "classroom_#{classroom_id}", {
-        type: 'submit_change_result',
+        type: 'submit_patch_result',
         payload: {
-          result: classroom.code
+          success: false,
+          client_id: client_id
         }
       }
     end

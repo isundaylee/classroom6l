@@ -81,6 +81,7 @@ GEM
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.0)
     debug_inspector (0.0.2)
+    diff_match_patch (0.1.0)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
     em-hiredis (0.3.0)
@@ -201,6 +202,7 @@ DEPENDENCIES
   ace-rails-ap
   byebug
   coffee-rails (~> 4.1.0)
+  diff_match_patch
   gon
   jbuilder (~> 2.0)
   jquery-rails

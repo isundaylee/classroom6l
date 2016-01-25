@@ -2,6 +2,7 @@ class ClassroomsController < ApplicationController
   def show
     @classroom = Classroom.find(params[:id])
     gon.classroom_id = @classroom.id
+    gon.client_id = SecureRandom.uuid
     gon.language = @classroom.language
   end
 

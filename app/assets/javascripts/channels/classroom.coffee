@@ -1,4 +1,4 @@
-App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id},
+App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id},
   connected: ->
     # Called when the subscription is ready for use on the server
 
@@ -16,18 +16,23 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
             window.appendOutput(data.payload.stderr)
         else
           alert('Error: ' + data.payload.error)
-      when 'submit_change_result'
-        if data.payload.result != window.editor.getValue()
-          pos = window.editor.session.selection.toJSON()
-          window.editor.setValue(data.payload.result, 1)
-          window.editor.session.selection.fromJSON(pos)
+      when 'submit_patch_result'
+        if data.payload.success
+          if data.payload.client_id == gon.client_id
+            # Our patch went through
+          else
+            # TODO: apply other's patch
         else
-          console.log('Broadcast matches ours! ')
+          if data.payload.client_id == gon.client_id
+            # TODO: our patch is rejected
+            console.log('Oops. Our patch is rejected. ')
+          else
+            # Other people's patch is rejected.
       else
         console.log("Unrecognised message received: " + data)
 
   run: ->
-    @perform 'run', classroom_id: gon.classroom_id
+    @perform 'run'
 
-  submitChange: (previous, updated) ->
-    @perform 'submit_change', classroom_id: gon.classroom_id, previous: previous, updated: updated
+  submitPatch: (patchText) ->
+    @perform 'submit_patch', patch: patchText
