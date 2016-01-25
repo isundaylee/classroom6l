@@ -2,74 +2,97 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+class CodeEditor
+  constructor: (divId) ->
+    @editor = ace.edit(divId)
+    @editor.setTheme('ace/theme/monokai')
+    @editor.getSession().setMode('ace/mode/' + gon.language)
+    @editor.$blockScrolling = Infinity
+
+    @dirtyState =
+      dirty: false
+      silenceCounter: 0
+      lastSeenContent: @editor.getValue()
+    @submitState =
+      lastSentContent: @editor.getValue()
+    @patchQueue = []
+
+    @dmp = new diff_match_patch
+
+    @pollingLoop()
+
+  enquePatch: (patch) ->
+    @patchQueue.push(patch)
+
+  # Internal methods details from now on
+  checkDirty: ->
+    content = @editor.getValue()
+    if content == @dirtyState.lastSeenContent
+      @dirtyState.silenceCounter += 1
+    else
+      @dirtyState.silenceCounter = 0
+      @dirtyState.dirty = true
+    @dirtyState.lastSeenContent = content
+
+  updateContent: (newContent) ->
+    console.assert(!@dirtyState.dirty, "updateContent() should only be called with a clean buffer. ")
+    range = @editor.selection.getRange()
+    @editor.setValue(newContent)
+    @editor.selection.setSelectionRange(range, false)
+    @dirtyState.lastSeenContent = newContent
+    @submitState.lastSentContent = newContent
+
+  applyPendingPatches: ->
+    patchApplied = false
+    content = @editor.getValue()
+    patchedContent = content
+
+    for p in @patchQueue
+      patches = @dmp.patch_fromText(p)
+      [patchedContent, success] = @dmp.patch_apply(patches, patchedContent)
+      allSuccess = _.every(success, _.identity)
+
+      unless allSuccess
+        # TODO: Force syncing.
+        console.log('Oops. Patch apply failed. ')
+
+    # TODO: potentially thread unsafe
+    @patchQueue = []
+
+    if patchedContent != content
+      @submitChanges()
+      @updateContent(patchedContent)
+
+  submitChanges: ->
+    content = @editor.getValue()
+    patchesToSubmit = @dmp.patch_make(@submitState.lastSentContent, content)
+    patchTextToSubmit = @dmp.patch_toText(patchesToSubmit)
+    App.classroom.submitPatch(patchTextToSubmit)
+    @dirtyState.dirty = false
+    @submitState.lastSentContent = content
+
+  pollingLoop: ->
+    @checkDirty()
+    @applyPendingPatches()
+    @submitChanges() if @dirtyState.silenceCounter >= 3 && @dirtyState.dirty
+
+    setTimeout =>
+      @pollingLoop()
+    , 100
+
 ready = ->
   if $('body#classrooms_show').length > 0
     # Set up the editor and output display
-    window.editor = ace.edit('editor')
+    window.codeEditor = new CodeEditor 'editor'
     window.output = ace.edit('output')
-    window.editor.setTheme('ace/theme/monokai')
-    window.editor.getSession().setMode('ace/mode/' + gon.language)
     window.output.setTheme('ace/theme/monokai')
     window.output.setOptions
       readOnly: true,
       highlightActiveLine: false,
       highlightGutterLine: false
 
-    # Initialise the code update state
-    window.dirtyState =
-      dirty: false
-      silenceCounter: 0
-      lastSeenContent: window.editor.getValue()
-    window.submitState =
-      lastSentContent: window.editor.getValue()
-    window.patchQueue = []
-
     # Initialise diff-match-patch
     window.dmp = new diff_match_patch
-
-    setInterval ->
-      # Update the dirty state
-      content = window.editor.getValue()
-      if content == window.dirtyState.lastSeenContent
-        window.dirtyState.silenceCounter += 1
-      else
-        window.dirtyState.silenceCounter = 0
-        window.dirtyState.dirty = true
-      window.dirtyState.lastSeenContent = content
-
-      # Apply pending patches
-      patchApplied = false
-      patchedContent = content
-      for p in window.patchQueue
-        patches = window.dmp.patch_fromText(p)
-        [patchedContent, success] = window.dmp.patch_apply(patches, patchedContent)
-        allSuccess = true
-        allSuccess &&= i for i in success
-
-        unless allSuccess
-          # TODO: Force syncing.
-          console.log('Oops. Patch apply failed. ')
-
-      # TODO: potentially thread unsafe
-      window.patchQueue = []
-      patchApplied = (patchedContent != content)
-
-      # If it has been quiet (300ms)
-      if (patchApplied || window.dirtyState.silenceCounter >= 3) && window.dirtyState.dirty
-        patchesToSubmit = window.dmp.patch_make(window.submitState.lastSentContent, content)
-        patchTextToSubmit = window.dmp.patch_toText(patchesToSubmit)
-        App.classroom.submitPatch(patchTextToSubmit)
-        window.dirtyState.dirty = false
-        window.submitState.lastSentContent = content
-
-      # Finally update the editor with patches content
-      if patchApplied
-        range = window.editor.selection.getRange()
-        window.editor.setValue(patchedContent)
-        window.editor.selection.setSelectionRange(range, false)
-        window.dirtyState.lastSeenContent = patchedContent
-        window.submitState.lastSentContent = patchedContent
-    , 100
 
     window.appendOutput = (content) ->
       window.output.setValue(window.output.getValue() + "\n\n" + content, 1)

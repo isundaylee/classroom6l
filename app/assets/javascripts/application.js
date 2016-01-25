@@ -18,4 +18,5 @@
 //= require ace/mode-python
 //= require ace/mode-ruby
 //= require diff_match_patch
+//= require underscore
 //= require_tree .

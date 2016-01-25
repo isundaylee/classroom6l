@@ -27,7 +27,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
         # Yay - our patch went through.
       else
         # We delay updating editor to the recurring function.
-        window.patchQueue.push(data.payload.patch)
+        window.codeEditor.enquePatch(data.payload.patch)
     else
       if data.payload.client_id == gon.client_id
         # TODO: our patch is rejected
