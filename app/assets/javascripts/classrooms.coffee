@@ -95,6 +95,9 @@ ready = ->
 
     # Bind the buttons
     $('#run').click ->
+      return if window.running
+      window.running = true
+      $(this).html('Running...')
       window.outputDisplay.append('Running your code...')
       App.classroom.run()
 
