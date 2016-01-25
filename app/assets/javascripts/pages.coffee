@@ -5,10 +5,10 @@
 ready = ->
   if $('body#pages_homepage').length > 0
     $('#python').click ->
-      $('[name=language]').val('python')
+      $('#classroom_language').val('python')
       $('form').submit()
     $('#ruby').click ->
-      $('[name=language]').val('ruby')
+      $('#classroom_language').val('ruby')
       $('form').submit()
 
 $(document).ready(ready)
