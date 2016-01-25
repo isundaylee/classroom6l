@@ -99,9 +99,6 @@ ready = ->
     window.codeEditor = new CodeEditor 'editor'
     window.outputDisplay = new OutputDisplay 'output'
 
-    # Initialise diff-match-patch
-    window.dmp = new diff_match_patch
-
     # Bind the buttons
     $('#run').click ->
       window.outputDisplay.append('Running your code...')
