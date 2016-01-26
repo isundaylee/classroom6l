@@ -1,11 +1,19 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in an EventMachine loop that does not support auto reloading.
 class ClassroomChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "classroom_#{params['classroom_id']}"
+    classroom_id = params['classroom_id'].to_i
+    username = params['username'].strip
+
+    stream_from "classroom_#{classroom_id}"
+
+    Classroom.find(classroom_id).attendance_add(username)
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
+    classroom_id = params['classroom_id'].to_i
+    username = params['username'].strip
+
+    Classroom.find(classroom_id).attendance_remove(username)
   end
 
   def run(data)
@@ -51,6 +59,18 @@ class ClassroomChannel < ApplicationCable::Channel
       type: 'revert_result',
       payload: {
         code: classroom.code
+      }
+    }
+  end
+
+  def query_attendance
+    classroom_id = params['classroom_id'].to_i
+    classroom = Classroom.find(classroom_id)
+
+    ActionCable.server.broadcast "classroom_#{classroom_id}", {
+      type: 'query_attendance_result',
+      payload: {
+        attendance: classroom.attendance_get
       }
     }
   end

@@ -39,7 +39,23 @@ class Classroom < ApplicationRecord
     language_profile()[:name]
   end
 
+  def attendance_add(username)
+    $redis.sadd(attendance_redis_key, username)
+  end
+
+  def attendance_remove(username)
+    $redis.srem(attendance_redis_key, username)
+  end
+
+  def attendance_get
+    $redis.smembers(attendance_redis_key)
+  end
+
   private
+    def attendance_redis_key
+      "attendance_#{self.id}"
+    end
+
     def save_code
       # Note that we DO wanna save @code even if it is an empty string.
       self.codes.create(content: @code) unless @code.nil?

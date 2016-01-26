@@ -1,4 +1,20 @@
-App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id},
+class DataStore
+  constructor: ->
+
+  getUsername: ->
+    if !localStorage.username
+      localStorage.username = window.prompt('What would you want to call yourself? ', 'Random Coder')
+    return localStorage.username
+
+  setAttendance: (attendance) ->
+    @attendance = attendance
+
+  getAttendance: ->
+    @attendance
+
+window.dataStore = new DataStore
+
+App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: window.dataStore.getUsername()},
   connected: ->
     # Load the initial code
     window.codeEditor.postNeedsRevert()
@@ -11,6 +27,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
       when 'run_result' then @handleRunResult(data)
       when 'submit_patch_result' then @handleSubmitPatchResult(data)
       when 'revert_result' then @handleRevertResult(data)
+      when 'query_attendance_result' then @handleQueryAttendanceResult(data)
       else console.log("Unrecognised message received: " + data)
 
   handleRunResult: (data) ->
@@ -42,6 +59,9 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
   handleRevertResult: (data) ->
     window.codeEditor.postRevertResult(data.payload.code)
 
+  handleQueryAttendanceResult: (data) ->
+    window.dataStore.setAttendance(data.payload.attendance)
+
   run: ->
     @perform 'run'
 
@@ -50,3 +70,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   revert: ->
     @perform 'revert'
+
+  queryAttendance: ->
+    @perform 'query_attendance'
+

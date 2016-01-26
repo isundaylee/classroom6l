@@ -122,11 +122,28 @@ class OutputDisplay
   append: (content) ->
     @display.setValue(@display.getValue() + "\n\n" + content, 1)
 
+class AttendanceDisplay
+  constructor: () ->
+    @updateAttendance()
+
+  updateAttendance: ->
+    $('#attendance').empty().append(_.map(window.dataStore.getAttendance(), (username) ->
+      $('<li>').text(username)
+    ))
+
+    App.classroom.queryAttendance()
+
+    setTimeout =>
+      @updateAttendance()
+    , 1000
+
+
 ready = ->
   if $('body#classrooms_show').length > 0
     # Set up the editor and output display
     window.codeEditor = new CodeEditor 'editor'
     window.outputDisplay = new OutputDisplay 'output'
+    window.attendanceDisplay = new AttendanceDisplay
 
     # Bind the buttons
     $('#run').click ->
