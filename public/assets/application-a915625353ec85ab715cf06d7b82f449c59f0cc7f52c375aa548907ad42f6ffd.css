@@ -1,0 +1,156 @@
+body#classrooms_show h1 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 30px;
+  padding: 12px;
+  margin: 0;
+  width: 100%;
+  color: white;
+  background-color: #272822;
+  border-bottom: 6px solid #2F3129;
+  text-align: right;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 300;
+  font-size: 18px; }
+body#classrooms_show #toolbar {
+  position: absolute;
+  top: 13px;
+  left: 20px; }
+  body#classrooms_show #toolbar div {
+    height: 20px;
+    background-color: #2F3129;
+    color: white;
+    font-family: "Source Sans Pro", sans-serif;
+    padding: 5px 15px;
+    font-weight: 300; }
+    body#classrooms_show #toolbar div:hover {
+      background-color: #2a2b24; }
+body#classrooms_show #editor {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 50%;
+  bottom: 43px; }
+body#classrooms_show #output {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  right: 0;
+  bottom: 43px; }
+body#classrooms_show #status_bar {
+  position: absolute;
+  height: 37px;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  border-top: 6px solid #2F3129;
+  background-color: #272822; }
+  body#classrooms_show #status_bar #attendance {
+    float: left;
+    margin: 0;
+    padding: 0;
+    margin-left: 10px; }
+    body#classrooms_show #status_bar #attendance li {
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: white;
+      display: inline-block;
+      padding: 2px 10px;
+      margin: 7px 3px;
+      background-color: #106AC4; }
+      body#classrooms_show #status_bar #attendance li:first-child {
+        margin-left: 0; }
+  body#classrooms_show #status_bar #ping {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+    display: inline-block;
+    padding: 2px 10px;
+    margin: 7px 3px;
+    float: right; }
+  body#classrooms_show #status_bar .lang {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+    display: inline-block;
+    padding: 2px 10px;
+    margin: 7px 3px;
+    float: right;
+    margin-right: 10px; }
+    body#classrooms_show #status_bar .lang.python {
+      background-color: #02730A; }
+    body#classrooms_show #status_bar .lang.ruby {
+      background-color: #106AC4; }
+body#pages_homepage {
+  background: url("https://c2.staticflickr.com/2/1636/24261663470_2e51f7863b_k.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  z-index: -100; }
+  body#pages_homepage #overlay {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #000;
+    opacity: 0.8; }
+  body#pages_homepage #devil {
+    height: 30vh;
+    display: block;
+    margin: 10vh auto 5vh; }
+  body#pages_homepage h1 {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 300;
+    font-size: 12vh;
+    margin: 0;
+    text-align: center;
+    color: white; }
+  body#pages_homepage form {
+    width: 800px;
+    display: block;
+    margin: 8vh auto; }
+    body#pages_homepage form input {
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 300;
+      font-size: 3vh;
+      background-color: #EEE;
+      width: 54%;
+      padding: 0.8vh 3%;
+      border: none; }
+    body#pages_homepage form div {
+      display: inline-block;
+      width: 13%;
+      color: white;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 300;
+      font-size: 3vh;
+      padding: 0.8vh 3%;
+      text-align: center;
+      border: none; }
+    body#pages_homepage form #python {
+      background-color: #009900; }
+    body#pages_homepage form #ruby {
+      background-color: #0066ff; }
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+
