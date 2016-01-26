@@ -1,6 +1,7 @@
 App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id},
   connected: ->
-    # Called when the subscription is ready for use on the server
+    # Load the initial code
+    window.codeEditor.postNeedsRevert()
 
   disconnected: ->
     # Called when the subscription has been terminated by the server
