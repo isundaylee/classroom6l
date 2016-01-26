@@ -19,6 +19,8 @@ class CodeEditor
     @revertState =
       inProgress: false
       finished: false
+    @debugState =
+      patches: []
     @patchQueue = []
 
     @dmp = new diff_match_patch
@@ -36,6 +38,10 @@ class CodeEditor
   postNeedsRevert: (silent = false) ->
     @submitState.needsRevert = true
     @submitState.needsRevertSilent = silent
+
+  # Debug feature
+  getPatchHistory: ->
+    @debugState.patches
 
   # Internal methods details from now on
   checkAndSubmitDirty: ->
@@ -68,6 +74,10 @@ class CodeEditor
     patchedContent = content
 
     for p in @patchQueue
+      @debugState.patches.push
+        type: 'incoming'
+        text: p
+
       patches = @dmp.patch_fromText(p)
       [patchedContent, success] = @dmp.patch_apply(patches, patchedContent)
       allSuccess = _.every(success, _.identity)
@@ -86,7 +96,13 @@ class CodeEditor
     content = @editor.getValue()
     patchesToSubmit = @dmp.patch_make(@submitState.lastSentContent, content)
     patchTextToSubmit = @dmp.patch_toText(patchesToSubmit)
+
+    @debugState.patches.push
+      type: 'outgoing'
+      text: patchTextToSubmit
+
     App.classroom.submitPatch(patchTextToSubmit)
+
     @dirtyState.dirty = false
     @submitState.lastSentContent = content
 
