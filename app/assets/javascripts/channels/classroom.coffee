@@ -42,8 +42,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
       if data.payload.stderr.length > 0
         window.outputDisplay.append("It generated the following error(s) ):")
         window.outputDisplay.append(data.payload.stderr)
-      window.running = false
-      $('#run').html('Run')
+      window.toolbar.postRunFinish()
     else
       alert('Error: ' + data.payload.error)
 

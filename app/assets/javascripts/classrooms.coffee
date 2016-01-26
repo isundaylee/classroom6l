@@ -127,6 +127,8 @@ class CodeEditor
 
 class OutputDisplay
   constructor: (divId) ->
+    @initial = "Here would go the output from your program ;)"
+
     @display = ace.edit(divId)
 
     @display.setTheme('ace/theme/monokai')
@@ -137,8 +139,13 @@ class OutputDisplay
 
     @display.$blockScrolling = Infinity
 
+    @clear()
+
   append: (content) ->
     @display.setValue(@display.getValue() + "\n\n" + content, 1)
+
+  clear: ->
+    @display.setValue(@initial, 1)
 
 class AttendanceDisplay
   constructor: () ->
@@ -193,6 +200,31 @@ class PingDisplay
       @pingState.succeeded = true
       @display.text(delay + ' ms')
 
+class Toolbar
+  constructor: (divId) ->
+    @toolbar = $('#' + divId)
+
+    @running = false
+
+    @toolbar.children('#run').click =>
+      @handleRun()
+    @toolbar.children('#clear').click =>
+      @handleClear()
+
+  handleRun: ->
+    return if @running
+    @running = true
+    @toolbar.children('#run').text('Running...')
+    window.outputDisplay.append('Running your code...')
+    App.classroom.run()
+
+  handleClear: ->
+    window.outputDisplay.clear()
+
+  postRunFinish: ->
+    @running = false
+    @toolbar.children('#run').text('Run')
+
 ready = ->
   if $('body#classrooms_show').length > 0
     # Set up the editor and output display
@@ -200,14 +232,7 @@ ready = ->
     window.outputDisplay = new OutputDisplay 'output'
     window.attendanceDisplay = new AttendanceDisplay
     window.pingDisplay = new PingDisplay 'ping'
-
-    # Bind the buttons
-    $('#run').click ->
-      return if window.running
-      window.running = true
-      $(this).html('Running...')
-      window.outputDisplay.append('Running your code...')
-      App.classroom.run()
+    window.toolbar = new Toolbar 'toolbar'
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
