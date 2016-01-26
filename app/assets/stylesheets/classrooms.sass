@@ -54,33 +54,32 @@ body#classrooms_show
     border-top: 6px solid #2F3129
     background-color: #272822
 
+    @mixin label
+      font-family: 'Source Sans Pro', sans-serif
+      font-size: 14px
+      font-weight: 300
+      color: white
+      display: inline-block
+      padding: 2px 10px
+      margin: 7px 3px
+
     #attendance
-      margin: 0
       float: left
-      padding-left: 10px
+      margin: 0
+      padding: 0
+      margin-left: 10px
 
       li
-        font-family: 'Source Sans Pro', sans-serif
-        font-size: 14px
-        font-weight: 300
-        color: white
-        display: inline-block
+        @include label
         background-color: #106AC4
-        padding: 2px 10px
-        margin: 7px 3px
 
         &:first-child
           margin-left: 0
 
     .lang
-      font-family: 'Source Sans Pro', sans-serif
-      font-size: 14px
-      font-weight: 300
-      color: #FFF
+      @include label
       float: right
-      padding: 2px 10px
-      margin: 7px 10px
-      // border-radius: 5px
+      margin-right: 10px
 
       &.python
         background-color: #02730A
