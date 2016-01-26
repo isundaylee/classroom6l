@@ -28,8 +28,9 @@ class CodeEditor
     @patchQueue.push(patch)
 
   postRevertResult: (code) ->
-    @revertState.finished = true
-    @revertState.result = code
+    if @revertState.inProgress
+      @revertState.finished = true
+      @revertState.result = code
 
   postNeedsRevert: ->
     @submitState.needsRevert = true
