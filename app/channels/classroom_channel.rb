@@ -18,4 +18,17 @@ class ClassroomChannel < ApplicationCable::Channel
     client_id = params['client_id']
     ChangeCodeJob.perform_later(classroom_id, client_id, data['patch'])
   end
+
+  def revert(data)
+    classroom_id = params['classroom_id'].to_i
+    classroom = Classroom.find(classroom_id)
+    client_id = params['client_id']
+
+    ActionCable.server.broadcast "classroom_#{classroom_id}", {
+      type: 'revert_result',
+      payload: {
+        code: classroom.code
+      }
+    }
+  end
 end

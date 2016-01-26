@@ -9,6 +9,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
     switch data.type
       when 'run_result' then @handleRunResult(data)
       when 'submit_patch_result' then @handleSubmitPatchResult(data)
+      when 'revert_result' then @handleRevertResult(data)
       else console.log("Unrecognised message received: " + data)
 
   handleRunResult: (data) ->
@@ -32,13 +33,19 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
         window.codeEditor.enquePatch(data.payload.patch)
     else
       if data.payload.client_id == gon.client_id
-        # TODO: our patch is rejected
         console.log('Oops. Our patch is rejected. ')
+        window.codeEditor.postNeedsRevert()
       else
         # Some poor soul's patch is rejected.
+
+  handleRevertResult: (data) ->
+    window.codeEditor.postRevertResult(data.payload.code)
 
   run: ->
     @perform 'run'
 
   submitPatch: (patchText) ->
     @perform 'submit_patch', patch: patchText
+
+  revert: ->
+    @perform 'revert'

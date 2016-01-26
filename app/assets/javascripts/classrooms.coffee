@@ -14,6 +14,10 @@ class CodeEditor
       lastSeenContent: @editor.getValue()
     @submitState =
       lastSentContent: @editor.getValue()
+      needsRevert: false
+    @revertState =
+      inProgress: false
+      finished: false
     @patchQueue = []
 
     @dmp = new diff_match_patch
@@ -22,6 +26,13 @@ class CodeEditor
 
   enquePatch: (patch) ->
     @patchQueue.push(patch)
+
+  postRevertResult: (code) ->
+    @revertState.finished = true
+    @revertState.result = code
+
+  postNeedsRevert: ->
+    @submitState.needsRevert = true
 
   # Internal methods details from now on
   checkAndSubmitDirty: ->
@@ -38,6 +49,16 @@ class CodeEditor
     @dirtyState.lastSeenContent = newContent
     @submitState.lastSentContent = newContent
 
+  triggerRevert: ->
+    return if @revertState.inProgress
+
+    window.outputDisplay.append('There have been conflicting edits. We need to revert your edit ):')
+
+    @revertState.inProgress = true
+    @revertState.finished = false
+    @editor.setOptions readOnly: true
+    App.classroom.revert()
+
   applyPendingPatches: ->
     patchApplied = false
     content = @editor.getValue()
@@ -49,8 +70,8 @@ class CodeEditor
       allSuccess = _.every(success, _.identity)
 
       unless allSuccess
-        # TODO: Force syncing.
-        console.log('Oops. Patch apply failed. ')
+        console.log('Oops. Failed to apply patch. Forcing syncing. ')
+        @triggerRevert()
 
     # TODO: potentially thread unsafe
     @patchQueue = []
@@ -67,8 +88,19 @@ class CodeEditor
     @submitState.lastSentContent = content
 
   pollingLoop: ->
-    @checkAndSubmitDirty()
-    @applyPendingPatches()
+    if @submitState.needsRevert
+      @submitState.needsRevert = false
+      @triggerRevert()
+
+    if @revertState.finished
+      @updateContent(@revertState.result)
+      @editor.setOptions readOnly: false
+      @revertState.inProgress = false
+      @revertState.finished = false
+
+    unless @revertState.inProgress
+      @checkAndSubmitDirty()
+      @applyPendingPatches()
 
     setTimeout =>
       @pollingLoop()
