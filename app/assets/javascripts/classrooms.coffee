@@ -15,6 +15,7 @@ class CodeEditor
     @submitState =
       lastSentContent: @editor.getValue()
       needsRevert: false
+      needsRevertSilent: false
     @revertState =
       inProgress: false
       finished: false
@@ -32,8 +33,9 @@ class CodeEditor
       @revertState.finished = true
       @revertState.result = code
 
-  postNeedsRevert: ->
+  postNeedsRevert: (silent = false) ->
     @submitState.needsRevert = true
+    @submitState.needsRevertSilent = silent
 
   # Internal methods details from now on
   checkAndSubmitDirty: ->
@@ -50,10 +52,10 @@ class CodeEditor
     @dirtyState.lastSeenContent = newContent
     @submitState.lastSentContent = newContent
 
-  triggerRevert: ->
+  triggerRevert: (silent = false)->
     return if @revertState.inProgress
 
-    window.outputDisplay.append('There have been conflicting edits. We need to revert your edit ):')
+    window.outputDisplay.append('There have been conflicting edits. We need to revert your edit ):') unless silent
 
     @revertState.inProgress = true
     @revertState.finished = false
@@ -91,7 +93,7 @@ class CodeEditor
   pollingLoop: ->
     if @submitState.needsRevert
       @submitState.needsRevert = false
-      @triggerRevert()
+      @triggerRevert(@submitState.needsRevertSilent)
 
     if @revertState.finished
       @updateContent(@revertState.result)

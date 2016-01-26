@@ -19,7 +19,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
     window.cableReady = true
 
     # Load the initial code
-    window.codeEditor.postNeedsRevert()
+    window.codeEditor.postNeedsRevert(true)
 
   disconnected: ->
     window.cableReady = false
