@@ -74,4 +74,18 @@ class ClassroomChannel < ApplicationCable::Channel
       }
     }
   end
+
+  def query_ping(data)
+    classroom_id = params['classroom_id'].to_i
+    client_id = params['client_id']
+    sequence = data['sequence'].to_i
+
+    ActionCable.server.broadcast "classroom_#{classroom_id}", {
+      type: 'query_ping_result',
+      payload: {
+        sequence: sequence,
+        client_id: client_id
+      }
+    }
+  end
 end

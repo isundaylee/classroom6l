@@ -16,11 +16,13 @@ window.dataStore = new DataStore
 
 App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: window.dataStore.getUsername()},
   connected: ->
+    window.cableReady = true
+
     # Load the initial code
     window.codeEditor.postNeedsRevert()
 
   disconnected: ->
-    # Called when the subscription has been terminated by the server
+    window.cableReady = false
 
   received: (data) ->
     switch data.type
@@ -28,7 +30,10 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
       when 'submit_patch_result' then @handleSubmitPatchResult(data)
       when 'revert_result' then @handleRevertResult(data)
       when 'query_attendance_result' then @handleQueryAttendanceResult(data)
+      when 'query_ping_result' then @handleQueryPingResult(data)
       else console.log("Unrecognised message received: " + data)
+
+  # Message handlers
 
   handleRunResult: (data) ->
     if data.payload.success
@@ -62,6 +67,12 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
   handleQueryAttendanceResult: (data) ->
     window.dataStore.setAttendance(data.payload.attendance)
 
+  handleQueryPingResult: (data) ->
+    if data.payload.client_id == gon.client_id
+      window.pingDisplay.postResult(data.payload.sequence)
+
+  # Actions
+
   run: ->
     @perform 'run'
 
@@ -73,4 +84,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   queryAttendance: ->
     @perform 'query_attendance'
+
+  queryPing: (sequence) ->
+    @perform 'query_ping', sequence: sequence
 

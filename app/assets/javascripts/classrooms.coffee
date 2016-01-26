@@ -138,12 +138,50 @@ class AttendanceDisplay
     , 1000
 
 
+class PingDisplay
+  constructor: (divId) ->
+    @display = $('#' + divId)
+
+    @pingState =
+      sequence: 0
+      succeeded: true
+
+    @queryPing()
+
+  queryPing: ->
+    nextDelay = 5000
+
+    unless @pingState.succeeded
+      @display.text('Disconnected')
+
+    @pingState.succeeded = false
+
+    if window.cableReady
+      @pingState.sequence += 1
+      @pingState.initiatedAt = Date.now()
+
+      App.classroom.queryPing(@pingState.sequence)
+    else
+      nextDelay = 100
+
+    setTimeout =>
+      @queryPing()
+    , nextDelay
+
+
+  postResult: (sequence) ->
+    if sequence == @pingState.sequence
+      delay = Date.now() - @pingState.initiatedAt
+      @pingState.succeeded = true
+      @display.text(delay + ' ms')
+
 ready = ->
   if $('body#classrooms_show').length > 0
     # Set up the editor and output display
     window.codeEditor = new CodeEditor 'editor'
     window.outputDisplay = new OutputDisplay 'output'
     window.attendanceDisplay = new AttendanceDisplay
+    window.pingDisplay = new PingDisplay 'ping'
 
     # Bind the buttons
     $('#run').click ->
