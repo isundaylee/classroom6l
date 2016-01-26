@@ -16,7 +16,30 @@ class ClassroomChannel < ApplicationCable::Channel
   def submit_patch(data)
     classroom_id = params['classroom_id'].to_i
     client_id = params['client_id']
-    ChangeCodeJob.perform_later(classroom_id, client_id, data['patch'])
+    classroom = Classroom.find(classroom_id)
+
+    result = {
+      type: 'submit_patch_result',
+      payload: {
+        client_id: client_id
+      }
+    }
+
+    dmp = DiffMatchPatch.new
+    patches = dmp.patch_fromText(data['patch'])
+    new_code, success = dmp.patch_apply(patches, classroom.code)
+
+    if success.all?
+      classroom.code = new_code
+      classroom.save!
+
+      result[:payload][:success] = true
+      result[:payload][:patch] = data['patch']
+    else
+      result[:payload][:success] = false
+    end
+
+    ActionCable.server.broadcast "classroom_#{classroom_id}", result
   end
 
   def revert(data)
