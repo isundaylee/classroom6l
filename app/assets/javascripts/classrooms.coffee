@@ -16,6 +16,7 @@ class CodeEditor
       lastSeenContent: @editor.getValue()
     @submitState =
       lastSentContent: @editor.getValue()
+      countup: 0
       needsRevert: false
       needsRevertSilent: false
     @revertState =
@@ -24,6 +25,7 @@ class CodeEditor
     @debugState =
       patches: []
     @patchQueue = []
+    @outgoingPatchQueue = []
 
     @dmp = new diff_match_patch
 
@@ -92,7 +94,9 @@ class CodeEditor
     @patchQueue = []
 
     # Do NOT submitChange() here as they are not our changes.
-    @updateContent(patchedContent) if patchedContent != content
+    if patchedContent != content
+      @updateContent(patchedContent) 
+      @flushOutgoingPatchQueue()
 
   submitChanges: ->
     content = @editor.getValue()
@@ -103,10 +107,15 @@ class CodeEditor
       type: 'outgoing'
       text: patchTextToSubmit
 
-    App.classroom.submitPatches([patchTextToSubmit])
+    @outgoingPatchQueue.push(patchTextToSubmit)
 
     @dirtyState.dirty = false
     @submitState.lastSentContent = content
+
+  flushOutgoingPatchQueue: ->
+    if @outgoingPatchQueue.length > 0
+      App.classroom.submitPatches(@outgoingPatchQueue)
+      @outgoingPatchQueue = []
 
   pollingLoop: ->
     if @submitState.needsRevert
@@ -122,6 +131,12 @@ class CodeEditor
     unless @revertState.inProgress
       @checkAndSubmitDirty()
       @applyPendingPatches()
+
+    # Now we only submit every 10 polling turns. 
+    @submitState.countup += 1
+    if @submitState.countup == 10
+      @submitState.countup = 0
+      @flushOutgoingPatchQueue() 
 
     setTimeout =>
       @pollingLoop()
