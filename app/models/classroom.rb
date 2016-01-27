@@ -51,6 +51,21 @@ class Classroom < ApplicationRecord
     $redis.smembers(attendance_redis_key)
   end
 
+  def apply_patch(patchText)
+    self.with_lock do
+      dmp = DiffMatchPatch.new
+      patches = dmp.patch_fromText(patchText)
+      new_code, success = dmp.patch_apply(patches, self.code)
+
+      if success.all?
+        self.code = new_code
+        self.save!
+      end
+
+      return success.all?
+    end
+  end
+
   private
     def attendance_redis_key
       "attendance_#{self.id}"

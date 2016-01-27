@@ -27,6 +27,8 @@ class ClassroomChannel < ApplicationCable::Channel
     classroom = Classroom.find(classroom_id)
 
     data['patches'].each do |patchText|
+      puts '[DBG] ' + patchText.inspect
+
       result = {
         type: 'submit_patch_result',
         payload: {
@@ -34,14 +36,9 @@ class ClassroomChannel < ApplicationCable::Channel
         }
       }
 
-      dmp = DiffMatchPatch.new
-      patches = dmp.patch_fromText(patchText)
-      new_code, success = dmp.patch_apply(patches, classroom.code)
+      success = classroom.apply_patch(patchText)
 
-      if success.all?
-        classroom.code = new_code
-        classroom.save!
-
+      if success
         result[:payload][:success] = true
         result[:payload][:patch] = patchText
       else
