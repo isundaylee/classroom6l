@@ -75,8 +75,8 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
   run: ->
     @perform 'run'
 
-  submitPatch: (patchText) ->
-    @perform 'submit_patch', patch: patchText
+  submitPatches: (patchTexts) ->
+    @perform 'submit_patches', patches: patchTexts
 
   revert: ->
     @perform 'revert'

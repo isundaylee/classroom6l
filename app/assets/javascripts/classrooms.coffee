@@ -103,7 +103,7 @@ class CodeEditor
       type: 'outgoing'
       text: patchTextToSubmit
 
-    App.classroom.submitPatch(patchTextToSubmit)
+    App.classroom.submitPatches([patchTextToSubmit])
 
     @dirtyState.dirty = false
     @submitState.lastSentContent = content
