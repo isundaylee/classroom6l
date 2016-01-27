@@ -7,6 +7,8 @@ class CodeEditor
     @editor = ace.edit(divId)
     @editor.setTheme('ace/theme/monokai')
     @editor.getSession().setMode('ace/mode/' + gon.language)
+    @editor.setOptions
+      wrap: true
     @editor.$blockScrolling = Infinity
 
     @dirtyState =
@@ -134,6 +136,7 @@ class OutputDisplay
     @display.setTheme('ace/theme/monokai')
     @display.setOptions
       readOnly: true,
+      wrap: true, 
       highlightActiveLine: false,
       highlightGutterLine: false
 
