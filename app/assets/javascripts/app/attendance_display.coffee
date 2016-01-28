@@ -3,7 +3,7 @@ class App.AttendanceDisplay
     @updateAttendance()
 
   updateAttendance: ->
-    $('#attendance').empty().append(_.map(App.dataStore.getAttendance(), (username) ->
+    $('#attendance').empty().append(_.map(App.DataStore.getSharedInstance().getAttendance(), (username) ->
       $('<li>').text(username)
     ))
 

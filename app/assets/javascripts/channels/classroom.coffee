@@ -1,6 +1,4 @@
-App.dataStore = new App.DataStore
-
-App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: App.dataStore.getUsername()},
+App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: App.DataStore.getSharedInstance().getUsername()},
   connected: ->
     App.cableReady = true
 
@@ -50,7 +48,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
     App.codeEditor.postRevertResult(data.payload.code)
 
   handleQueryAttendanceResult: (data) ->
-    App.dataStore.setAttendance(data.payload.attendance)
+    App.DataStore.getSharedInstance().setAttendance(data.payload.attendance)
 
   handleQueryPingResult: (data) ->
     if data.payload.client_id == gon.client_id
