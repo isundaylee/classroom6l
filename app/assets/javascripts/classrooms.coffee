@@ -161,6 +161,9 @@ class OutputDisplay
 
   append: (content) ->
     @display.setValue(@display.getValue() + "\n\n" + content, 1)
+    lineNumber = @display.session.getLength() - 1
+    @display.scrollToLine(lineNumber, true, true, ->)
+    @display.gotoLine(lineNumber, 0, true)
 
   clear: ->
     @display.setValue(@initial, 1)
