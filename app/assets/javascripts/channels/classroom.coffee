@@ -1,28 +1,14 @@
-class DataStore
-  constructor: ->
+App.dataStore = new App.DataStore
 
-  getUsername: ->
-    if !localStorage.username
-      localStorage.username = window.prompt('What would you want to call yourself? ', 'Random Coder')
-    return localStorage.username
-
-  setAttendance: (attendance) ->
-    @attendance = attendance
-
-  getAttendance: ->
-    @attendance
-
-window.dataStore = new DataStore
-
-App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: window.dataStore.getUsername()},
+App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: App.dataStore.getUsername()},
   connected: ->
-    window.cableReady = true
+    App.cableReady = true
 
     # Load the initial code
-    window.codeEditor.postNeedsRevert(true)
+    App.codeEditor.postNeedsRevert(true)
 
   disconnected: ->
-    window.cableReady = false
+    App.cableReady = false
 
   received: (data) ->
     switch data.type
@@ -37,12 +23,12 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   handleRunResult: (data) ->
     if data.payload.success
-      window.outputDisplay.append("The result of your code is: ")
-      window.outputDisplay.append(data.payload.stdout)
+      App.outputDisplay.append("The result of your code is: ")
+      App.outputDisplay.append(data.payload.stdout)
       if data.payload.stderr.length > 0
-        window.outputDisplay.append("It generated the following error(s) ):")
-        window.outputDisplay.append(data.payload.stderr)
-      window.toolbar.postRunFinish()
+        App.outputDisplay.append("It generated the following error(s) ):")
+        App.outputDisplay.append(data.payload.stderr)
+      App.toolbar.postRunFinish()
     else
       alert('Error: ' + data.payload.error)
 
@@ -52,23 +38,23 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
         # Yay - our patch went through.
       else
         # We delay updating editor to the recurring function.
-        window.codeEditor.enquePatch(data.payload.patch)
+        App.codeEditor.enquePatch(data.payload.patch)
     else
       if data.payload.client_id == gon.client_id
         console.log('Oops. Our patch is rejected. ')
-        window.codeEditor.postNeedsRevert()
+        App.codeEditor.postNeedsRevert()
       else
         # Some poor soul's patch is rejected.
 
   handleRevertResult: (data) ->
-    window.codeEditor.postRevertResult(data.payload.code)
+    App.codeEditor.postRevertResult(data.payload.code)
 
   handleQueryAttendanceResult: (data) ->
-    window.dataStore.setAttendance(data.payload.attendance)
+    App.dataStore.setAttendance(data.payload.attendance)
 
   handleQueryPingResult: (data) ->
     if data.payload.client_id == gon.client_id
-      window.pingDisplay.postResult(data.payload.sequence)
+      App.pingDisplay.postResult(data.payload.sequence)
 
   # Actions
 
