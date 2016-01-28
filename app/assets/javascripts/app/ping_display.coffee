@@ -1,7 +1,5 @@
 class App.PingDisplay
-  constructor: (divId) ->
-    @display = $('#' + divId)
-
+  constructor: ->
     @pingState =
       sequence: 0
       succeeded: true
@@ -12,7 +10,8 @@ class App.PingDisplay
     nextDelay = 5000
 
     unless @pingState.succeeded
-      @display.text('Disconnected')
+      # TODO: adds React
+      console.log 'a'
 
     @pingState.succeeded = false
 
@@ -33,4 +32,4 @@ class App.PingDisplay
     if sequence == @pingState.sequence
       delay = Date.now() - @pingState.initiatedAt
       @pingState.succeeded = true
-      @display.text(delay + ' ms')
+      # TODO: adds React

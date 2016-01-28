@@ -8,6 +8,8 @@
 //= require diff_match_patch
 //= require underscore
 //= require action_cable
+//= require react
+//= require react_ujs
 
 //= require init
 //= require app/code_editor
@@ -16,6 +18,7 @@
 //= require app/ping_display
 //= require app/toolbar
 //= require app/data_store
+//= require react/status_bar
 //= require channels/classroom
 
 //= require pages

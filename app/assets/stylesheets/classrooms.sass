@@ -51,6 +51,9 @@ body#classrooms_show
     bottom: 43px
 
   #status_bar
+    display: none
+
+  .status-bar
     position: absolute
     height: 37px
     bottom: 0px
@@ -68,7 +71,7 @@ body#classrooms_show
       padding: 2px 10px
       margin: 7px 3px
 
-    #attendance
+    .attendance
       float: left
       margin: 0
       padding: 0
@@ -81,11 +84,11 @@ body#classrooms_show
         &:first-child
           margin-left: 0
 
-    #ping
+    .ping
       @include label
       float: right
 
-    .lang
+    .language
       @include label
       float: right
       margin-right: 10px
