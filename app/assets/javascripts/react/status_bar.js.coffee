@@ -4,46 +4,28 @@
   displayName: 'StatusBar'
 
   getInitialState: ->
-    ping: -1
+    ping: null
     lang: 'ruby'
     language: 'Ruby'
     attendance: ['Jiahao', 'Blacky']
 
   componentDidMount: ->
-    App.classroom.registerCallback (data) =>
-      return unless data.type == 'query_ping_result'
-      delay = Date.now() - @pingInitiatedAt
-      @pingSucceeded = true
-      @setState (state) ->
-        _.extend {}, state, 
-          ping: delay
-
-    @pingInitiatedAt = 0
-    @pingSequence = 0
-    @pingSucceeded = true
-    @triggerPing()
+    App.classroom.onConnect =>
+      @triggerPing()
+      setInterval =>
+        @triggerPing()
+      , 5000
 
   triggerPing: ->
-    nextDelay = 5000
-
-    unless @pingSucceeded
+    startedAt = Date.now()
+    
+    App.classroom.ping().setTimeout(4000).onSuccess =>
       @setState (state) ->
-        _.extend {}, state, 
-          ping: -1
-
-    @pingSucceeded = false
-
-    if App.cableReady
-      @pingSequence += 1
-      @pingInitiatedAt = Date.now()
-
-      App.classroom.queryPing(@pingSequence)
-    else
-      nextDelay = 100
-
-    setTimeout =>
-      @triggerPing()
-    , nextDelay
+        _.merge @state, {ping: Date.now() - startedAt}
+    .onTimeout =>
+      @setState (state) ->
+        _.merge @state, {ping: null}
+    .send()
 
   render: -> 
     <div className="status-bar">
@@ -54,5 +36,5 @@
         }
       </ul>
       <span className={"language " + @state.lang}>{ @state.language }</span>
-      <span className="ping">{ @state.ping } ms</span>
+      <span className="ping">{ @state.ping || "???" } ms</span>
     </div>

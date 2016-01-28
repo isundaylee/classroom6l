@@ -87,4 +87,17 @@ class ClassroomChannel < ApplicationCable::Channel
       }
     }
   end
+
+  def ping(data)
+    classroom_id = params['classroom_id'].to_i
+    client_id = params['client_id']
+    seq = data['seq'].to_i
+
+    ActionCable.server.broadcast "classroom_#{classroom_id}", {
+      success: true, 
+      client_id: client_id, 
+      seq: seq, 
+      payload: {}
+    }
+  end
 end

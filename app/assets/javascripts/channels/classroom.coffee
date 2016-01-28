@@ -1,21 +1,41 @@
 App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", classroom_id: gon.classroom_id, client_id: gon.client_id, username: App.DataStore.getSharedInstance().getUsername()},
   connected: ->
+    @seq = 0
+    @requestCallbacks = {}
+
     App.cableReady = true
+    @isConnected = true
+
+    if @connectCallbacks
+      cb() for cb in @connectCallbacks
 
     # Load the initial code
     App.codeEditor.postNeedsRevert(true)
 
   disconnected: ->
     App.cableReady = false
+    @isConnected = false
+
+    if @disconnectCallbacks
+      cb() for cb in @disconnectCallbacks
 
   received: (data) ->
+    # Handles CableRequest responses
+    if data.client_id == gon.client_id
+      if data.seq && @requestCallbacks[data.seq]
+        @requestCallbacks[data.seq](data) 
+        delete @requestCallbacks[data.seq]
+        return
+
     switch data.type
       when 'run_result' then @handleRunResult(data)
       when 'submit_patch_result' then @handleSubmitPatchResult(data)
       when 'revert_result' then @handleRevertResult(data)
       when 'query_attendance_result' then @handleQueryAttendanceResult(data)
       when 'query_ping_result' then @handleQueryPingResult(data)
-      else console.log("Unrecognised message received: " + data)
+      else 
+        console.log "Unrecognised message received: "
+        console.log data
 
   # Message handlers
 
@@ -50,10 +70,6 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
   handleQueryAttendanceResult: (data) ->
     App.DataStore.getSharedInstance().setAttendance(data.payload.attendance)
 
-  handleQueryPingResult: (data) ->
-    if data.payload.client_id == gon.client_id
-      App.pingDisplay.postResult(data.payload.sequence)
-
   # Actions
 
   run: ->
@@ -68,6 +84,22 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
   queryAttendance: ->
     @perform 'query_attendance'
 
-  queryPing: (sequence) ->
-    @perform 'query_ping', sequence: sequence
+  ping: ->
+    new App.CableRequest(this, 'ping')
+
+  # Callback infrastructure
+  
+  onConnect: (cb) ->
+    @connectCallbacks ||= []
+    @connectCallbacks.push(cb)
+    cb() if @isConnected
+
+  onDisconnect: (cb) ->
+    @disconnectCallbacks ||= []
+    @disconnectCallbacks.push(cb)
+
+  performWithCallback: (method, params, cb) ->
+    @seq += 1
+    @requestCallbacks[@seq] = cb
+    @perform method, _.merge(params, {seq: @seq})
 

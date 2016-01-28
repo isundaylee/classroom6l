@@ -12,12 +12,13 @@
 //= require react_ujs
 
 //= require init
+//= require utilities
 //= require app/code_editor
 //= require app/output_display
 //= require app/attendance_display
-//= require app/ping_display
 //= require app/toolbar
 //= require app/data_store
+//= require app/cable_request
 //= require react/status_bar
 //= require channels/classroom
 

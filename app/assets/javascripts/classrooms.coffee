@@ -8,5 +8,4 @@ $(document).on 'page:change', ->
     App.codeEditor = new App.CodeEditor 'editor'
     App.outputDisplay = new App.OutputDisplay 'output'
     App.attendanceDisplay = new App.AttendanceDisplay
-    App.pingDisplay = new App.PingDisplay 'ping'
     App.toolbar = new App.Toolbar 'toolbar'
