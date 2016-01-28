@@ -7,5 +7,4 @@ $(document).on 'page:change', ->
     # Set up the editor and output display
     App.codeEditor = new App.CodeEditor 'editor'
     App.outputDisplay = new App.OutputDisplay 'output'
-    App.attendanceDisplay = new App.AttendanceDisplay
     App.toolbar = new App.Toolbar 'toolbar'

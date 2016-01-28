@@ -21,11 +21,12 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   received: (data) ->
     # Handles CableRequest responses
-    if data.client_id == gon.client_id
-      if data.seq && @requestCallbacks[data.seq]
-        @requestCallbacks[data.seq](data) 
-        delete @requestCallbacks[data.seq]
-        return
+    if data.seq && data.client_id
+      if data.client_id == gon.client_id
+        if @requestCallbacks[data.seq]
+          @requestCallbacks[data.seq](data) 
+          delete @requestCallbacks[data.seq]
+      return
 
     switch data.type
       when 'run_result' then @handleRunResult(data)
@@ -82,7 +83,7 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
     @perform 'revert'
 
   queryAttendance: ->
-    @perform 'query_attendance'
+    new App.CableRequest(this, 'query_attendance')
 
   ping: ->
     new App.CableRequest(this, 'ping')

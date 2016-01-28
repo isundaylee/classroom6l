@@ -7,7 +7,7 @@
     ping: null
     lang: 'ruby'
     language: 'Ruby'
-    attendance: ['Jiahao', 'Blacky']
+    attendance: []
 
   componentDidMount: ->
     App.classroom.onConnect =>
@@ -16,15 +16,26 @@
         @triggerPing()
       , 5000
 
+      @queryAttendance()
+      setInterval =>
+        @queryAttendance()
+      , 1000
+
   triggerPing: ->
     startedAt = Date.now()
-    
+
     App.classroom.ping().setTimeout(4000).onSuccess =>
       @setState (state) ->
         _.merge @state, {ping: Date.now() - startedAt}
     .onTimeout =>
       @setState (state) ->
         _.merge @state, {ping: null}
+    .send()
+
+  queryAttendance: ->
+    App.classroom.queryAttendance().onSuccess (data) =>
+      @setState (state) ->
+        _.merge @state, {attendance: data.attendance}
     .send()
 
   render: -> 

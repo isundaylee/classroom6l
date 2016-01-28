@@ -15,7 +15,6 @@
 //= require utilities
 //= require app/code_editor
 //= require app/output_display
-//= require app/attendance_display
 //= require app/toolbar
 //= require app/data_store
 //= require app/cable_request
