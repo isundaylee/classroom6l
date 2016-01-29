@@ -29,6 +29,13 @@ class ClassroomChannel < ApplicationCable::Channel
     transmitResponse data['seq'].to_i, true, {}
   end
 
+  def list_parchments(data)
+    @classroom.reload
+    parchments = {}
+    @classroom.parchments.each { |p| parchments[p.id] = p.path }
+    transmitResponse data['seq'].to_i, true, parchments: parchments
+  end
+
   private
     def broadcast_channel
       "classroom_#{@classroom_id}"

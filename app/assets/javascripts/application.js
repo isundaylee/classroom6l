@@ -20,6 +20,7 @@
 //= require app/cable_request_manager
 //= require react/classroom
 //= require react/toolbar
+//= require react/parchment_list
 //= require react/code_editor
 //= require react/output_display
 //= require react/status_bar

@@ -7,6 +7,9 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   ping: ->
     new App.CableRequest(this, 'ping')
+
+  listParchments: ->
+    new App.CableRequest(this, 'list_parchments')
     
 _.extend(App.classroom, App.CableRequestManager)
 App.classroom.setup()

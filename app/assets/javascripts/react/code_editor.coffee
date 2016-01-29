@@ -11,8 +11,15 @@
 
   componentDidMount: ->
     @dmp = new diff_match_patch
+
+    @initialiseParchment(@props.parchmentId)
+
+  initialiseParchment: (parchmentId) ->
+    @setState @getInitialState()
+
+    @channel.unsubscribe() if (@channel && @channel.isConnected)
     @queuedPatches = []
-    @channel = App.createParchmentChannel(@props.parchmentId)
+    @channel = App.createParchmentChannel(parchmentId)
 
     @channel.onConnect =>
       @syncCode()
@@ -20,6 +27,10 @@
     @channel.onReceivingBroadcastOfType 'patch', (data) =>
       @queuedPatches.push(data.payload.patch) unless data.payload.author == gon.client_id
       @armSilenceTrigger()
+
+  componentWillReceiveProps: (nextProps) ->
+    if nextProps.parchmentId != @props.parchmentId
+      @initialiseParchment(nextProps.parchmentId)
 
   # Code syncing logic
 
