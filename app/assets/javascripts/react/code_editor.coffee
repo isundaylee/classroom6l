@@ -90,7 +90,8 @@
              height='' 
            onChange={ @onCodeChange } 
               value={ @state.code } 
-           readOnly={ @state.readOnly } />
+           readOnly={ @state.readOnly }
+        wrapEnabled=true />
 
   # Utility boilerplate
 

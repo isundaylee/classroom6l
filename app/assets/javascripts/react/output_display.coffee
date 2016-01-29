@@ -41,7 +41,8 @@
               height='' 
                value={ @state.content } 
             readOnly=true
-       alwaysShowEnd=true />
+       alwaysShowEnd=true
+         wrapEnabled=true />
 
   # Utility boilerplate
 
