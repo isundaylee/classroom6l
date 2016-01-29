@@ -14,8 +14,10 @@
 
 //= require init
 //= require utilities
+//= require app/pub_sub
 //= require app/data_store
 //= require app/cable_request
+//= require react/classroom
 //= require react/toolbar
 //= require react/code_editor
 //= require react/output_display

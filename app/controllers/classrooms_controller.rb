@@ -5,6 +5,7 @@ class ClassroomsController < ApplicationController
     gon.client_id = SecureRandom.uuid
     gon.lang = @classroom.language
     gon.language = @classroom.language_name
+    gon.classroom_name = @classroom.name
   end
 
   def create

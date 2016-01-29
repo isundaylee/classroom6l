@@ -79,7 +79,7 @@
   # React rendering logic
 
   render: ->
-    <AceEditor mode={ gon.language } 
+    <AceEditor mode={ gon.lang } 
               theme="monokai" 
                name="code_editor" 
               width='' 

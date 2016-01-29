@@ -3,12 +3,25 @@
 @OutputDisplay = React.createClass
   displayName: 'OutputDisplay'
 
+  propTypes:
+    defaultContent: React.PropTypes.string
+
+  getDefaultProps: ->
+    defaultContent: 'Welcome to Classroom 6.L ;) '
+
   getInitialState: ->
     content: ''
 
+  componentWillMount: ->
+    @clearSubToken = App.PubSub.subscribe 'clearOutputDisplay', =>
+      @changeState content: @props.defaultContent
+
+  componentWillUnmount: ->
+    App.PubSub.unsubscribe 'clearOutputDisplay', @clearSubToken
+
   componentDidMount: ->
     App.classroom.onConnect =>
-      @appendContent 'Welcome to Classroom 6.L ;) '
+      @changeState content: @props.defaultContent
 
     App.classroom.onReceivingBroadcastOfType 'run_result', (data) =>
       output = "The output of your code is: \n\n" + data.payload.stdout

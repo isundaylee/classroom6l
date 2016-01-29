@@ -24,12 +24,15 @@
     @changeState running: true
     App.classroom.run().send()
 
+  onClear: ->
+    App.PubSub.publish 'clearOutputDisplay', {}
+
   # React rendering
 
   render: ->
     <div className='toolbar'>
       <div className='run' onClick={ @onRun }>{ if @state.running then 'Running...' else 'Run' }</div>
-      <div className='clear'>Clear</div>
+      <div className='clear' onClick={ @onClear }>Clear</div>
     </div>
 
   # Utility boilerplate
