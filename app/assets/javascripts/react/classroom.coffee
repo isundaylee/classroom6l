@@ -6,7 +6,7 @@
     activeParchmentPath: gon.main_parchment_path
 
   componentDidMount: ->
-    App.PubSub.subscribe 'switch_to_parchment', (data) =>
+    App.PubSub.subscribe 'switchToParchment', (data) =>
       @changeState activeParchmentId: data.parchmentId, activeParchmentPath: data.parchmentPath
 
   render: ->

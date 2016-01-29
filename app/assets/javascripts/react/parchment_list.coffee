@@ -6,7 +6,7 @@
     activeParchmentId: null
 
   editParchment: (parchmentId, parchmentPath) ->
-    App.PubSub.publish 'switch_to_parchment', parchmentId: parchmentId, parchmentPath: parchmentPath
+    App.PubSub.publish 'switchToParchment', parchmentId: parchmentId, parchmentPath: parchmentPath
 
   componentDidMount: ->
     App.classroom.onConnect =>
@@ -15,7 +15,7 @@
         @updateParchments()
       , 1000 unless @updateParchmentsInterval
 
-    App.PubSub.subscribe 'did_switch_to_parchment', (data) =>
+    App.PubSub.subscribe 'didSwitchToParchment', (data) =>
       @changeState activeParchmentId: data.parchmentId
 
   updateParchments: ->

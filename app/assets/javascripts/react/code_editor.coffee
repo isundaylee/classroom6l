@@ -26,7 +26,7 @@
     @channel = App.createParchmentChannel(parchmentId)
 
     @channel.onConnect =>
-      App.PubSub.publish 'did_switch_to_parchment', parchmentId: parchmentId
+      App.PubSub.publish 'didSwitchToParchment', parchmentId: parchmentId
       @syncCode()
 
     @channel.onReceivingBroadcastOfType 'patch', (data) =>
