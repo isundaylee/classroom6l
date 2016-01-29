@@ -5,7 +5,7 @@
     activeParchmentId: gon.main_parchment_id
 
   componentDidMount: ->
-    App.PubSub.subscribe 'edit_parchment', (data) =>
+    App.PubSub.subscribe 'switch_to_parchment', (data) =>
       @changeState activeParchmentId: data.parchment_id
 
   render: ->

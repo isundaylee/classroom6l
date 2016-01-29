@@ -3,9 +3,10 @@
 
   getInitialState: ->
     parchments: {}
+    activeParchmentId: null
 
   editParchment: (parchment_id) ->
-    App.PubSub.publish 'edit_parchment', parchment_id: parchment_id
+    App.PubSub.publish 'switch_to_parchment', parchment_id: parchment_id
 
   componentDidMount: ->
     App.classroom.onConnect =>
@@ -13,6 +14,9 @@
       @updateParchmentsInterval = setInterval =>
         @updateParchments()
       , 1000 unless @updateParchmentsInterval
+
+    App.PubSub.subscribe 'did_switch_to_parchment', (data) =>
+      @changeState activeParchmentId: data.parchmentId
 
   updateParchments: ->
     App.classroom.listParchments().onSuccess (data) =>
@@ -23,7 +27,12 @@
     <ul className="parchment-list">
       {
         _.map @state.parchments, (path, id) =>
-          <li key={ id } onDoubleClick={ @editParchment.bind(this, parseInt(id)) }>{ path }</li>
+          id = parseInt(id)
+          <li onDoubleClick={ @editParchment.bind(this, id) }
+                        key={ id } 
+                  className={ if @state.activeParchmentId == id then 'active' else '' }>
+            { path }
+          </li>
       }
     </ul>
 
