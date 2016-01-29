@@ -1,4 +1,6 @@
 this.AceEditor = React.createClass({
+    displayName: 'AceEditor',
+
     propTypes: {
         mode: React.PropTypes.string,
         theme: React.PropTypes.string,
@@ -16,10 +18,10 @@ this.AceEditor = React.createClass({
         highlightActiveLine: React.PropTypes.bool,
         showPrintMargin: React.PropTypes.bool,
         selectFirstLine: React.PropTypes.bool,
-        wrapEnabled: React.PropTypes.bool, 
+        wrapEnabled: React.PropTypes.bool,
         alwaysShowEnd: React.PropTypes.bool
     },
-    getDefaultProps() {
+    getDefaultProps: function getDefaultProps() {
         return {
             name: 'brace-editor',
             mode: '',
@@ -41,20 +43,20 @@ this.AceEditor = React.createClass({
             alwaysShowEnd: false
         };
     },
-    onChange() {
+    onChange: function onChange() {
         if (this.props.onChange) {
             var value = this.editor.getValue();
             this.props.onChange(value);
         }
     },
-    componentDidMount() {
+    componentDidMount: function componentDidMount() {
         this.editor = ace.edit(this.props.name);
         this.editor.$blockScrolling = Infinity;
         this.editor.getSession().setMode('ace/mode/' + this.props.mode);
         this.editor.setTheme('ace/theme/' + this.props.theme);
         this.editor.setFontSize(this.props.fontSize);
         this.editor.on('change', this.onChange);
-        this.editor.setValue(this.props.defaultValue || this.props.value, (this.props.selectFirstLine === true ? -1 : null));
+        this.editor.setValue(this.props.defaultValue || this.props.value, this.props.selectFirstLine === true ? -1 : null);
         this.editor.setOption('maxLines', this.props.maxLines);
         this.editor.setOption('readOnly', this.props.readOnly);
         this.editor.setOption('highlightActiveLine', this.props.highlightActiveLine);
@@ -67,7 +69,7 @@ this.AceEditor = React.createClass({
         }
     },
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
         var currentRange = this.editor.selection.getRange();
 
         // only update props if they are changed
@@ -96,12 +98,12 @@ this.AceEditor = React.createClass({
             this.editor.getSession().setUseWrapMode(nextProps.wrapEnabled);
         }
         if (this.editor.getValue() !== nextProps.value) {
-            this.editor.setValue(nextProps.value, (this.props.selectFirstLine === true ? -1 : null));
-            if(currentRange && typeof currentRange === "object") {
+            this.editor.setValue(nextProps.value, this.props.selectFirstLine === true ? -1 : null);
+            if (currentRange && typeof currentRange === "object") {
                 this.editor.getSession().getSelection().setSelectionRange(currentRange);
             }
-            if(this.props.alwaysShowEnd) {
-                this.showEnd(); 
+            if (this.props.alwaysShowEnd) {
+                this.showEnd();
             }
         }
         if (nextProps.showGutter !== this.props.showGutter) {
@@ -111,21 +113,21 @@ this.AceEditor = React.createClass({
             this.alwaysShowEnd();
         }
     },
-    showEnd() {
-        var lineNumber = this.editor.getSession().getLength() - 1; 
-        this.editor.scrollToLine(lineNumber, true, true, function() {}); 
-        this.editor.gotoLine(lineNumber, 0, true); 
+    showEnd: function showEnd() {
+        var lineNumber = this.editor.getSession().getLength() - 1;
+        this.editor.scrollToLine(lineNumber, true, true, function () {});
+        this.editor.gotoLine(lineNumber, 0, true);
     },
-    render() {
+    render: function render() {
         var divStyle = {
             width: this.props.width,
-            height: this.props.height,
+            height: this.props.height
         };
 
         return React.DOM.div({
             id: this.props.name,
             onChange: this.onChange,
-            style: divStyle,
+            style: divStyle
         });
     }
 });
