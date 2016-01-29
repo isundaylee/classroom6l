@@ -17,6 +17,7 @@ class RunCodeJob < ApplicationJob
     begin
       response = RestClient.post(CODE_RUNNER_URL, code: File.new(tmpfile.path))
       result = JSON.parse(response.to_s)
+      
       ActionCable.server.broadcast "classroom_#{classroom_id}", {
         type: 'run_result',
         payload: result

@@ -1,11 +1,6 @@
 <h1>Welcome to <%= @classroom.name %></h1>
 
-<div id="toolbar">
-  <div id="run">Run</div>
-  <div id="clear">Clear</div>
-</div>
-
-<div id="output"></div>
-
+<%= react_component 'Toolbar', {}, :div %>
 <%= react_component 'CodeEditor', {}, :div %>
+<%= react_component 'OutputDisplay', {}, :div %>
 <%= react_component 'StatusBar', {}, :div %>
