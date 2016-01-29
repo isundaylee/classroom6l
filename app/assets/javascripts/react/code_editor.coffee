@@ -3,19 +3,23 @@
 
   propTypes:
     parchmentId: React.PropTypes.number
+    parchmentPath: React.PropTypes.string
 
   getInitialState: ->
     code: ''
     readOnly: false
     ignoreChanges: false
+    editorMode: 'plain_text'
 
   componentDidMount: ->
     @dmp = new diff_match_patch
+    @modelist = ace.require('ace/ext/modelist')
 
-    @initialiseParchment(@props.parchmentId)
+    @initialiseParchment(@props.parchmentId, @props.parchmentPath)
 
-  initialiseParchment: (parchmentId) ->
+  initialiseParchment: (parchmentId, parchmentPath) ->
     @setState @getInitialState()
+    @changeState editorMode: @modelist.getModeForPath(parchmentPath).name
 
     @channel.unsubscribe() if (@channel && @channel.isConnected)
     @queuedPatches = []
@@ -31,7 +35,7 @@
 
   componentWillReceiveProps: (nextProps) ->
     if nextProps.parchmentId != @props.parchmentId
-      @initialiseParchment(nextProps.parchmentId)
+      @initialiseParchment(nextProps.parchmentId, nextProps.parchmentPath)
 
   # Code syncing logic
 
@@ -95,7 +99,7 @@
   # React rendering logic
 
   render: ->
-    <AceEditor mode={ gon.lang } 
+    <AceEditor mode={ @state.editorMode } 
               theme="monokai" 
                name="code_editor" 
               width='' 

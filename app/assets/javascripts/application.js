@@ -5,6 +5,7 @@
 //= require ace/theme-monokai
 //= require ace/mode-python
 //= require ace/mode-ruby
+//= require ace/ext-modelist
 //= require diff_match_patch
 //= require underscore
 //= require action_cable

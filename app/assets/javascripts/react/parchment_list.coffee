@@ -5,8 +5,8 @@
     parchments: {}
     activeParchmentId: null
 
-  editParchment: (parchment_id) ->
-    App.PubSub.publish 'switch_to_parchment', parchment_id: parchment_id
+  editParchment: (parchmentId, parchmentPath) ->
+    App.PubSub.publish 'switch_to_parchment', parchmentId: parchmentId, parchmentPath: parchmentPath
 
   componentDidMount: ->
     App.classroom.onConnect =>
@@ -28,7 +28,7 @@
       {
         _.map @state.parchments, (path, id) =>
           id = parseInt(id)
-          <li onDoubleClick={ @editParchment.bind(this, id) }
+          <li onDoubleClick={ @editParchment.bind(this, id, path) }
                         key={ id } 
                   className={ if @state.activeParchmentId == id then 'active' else '' }>
             { path }

@@ -2,18 +2,19 @@
   displayName: 'Classroom' 
 
   getInitialState: ->
-    activeParchmentId: gon.main_parchment_id
+    activeParchmentId: gon.main_parchment_id,
+    activeParchmentPath: gon.main_parchment_path
 
   componentDidMount: ->
     App.PubSub.subscribe 'switch_to_parchment', (data) =>
-      @changeState activeParchmentId: data.parchment_id
+      @changeState activeParchmentId: data.parchmentId, activeParchmentPath: data.parchmentPath
 
   render: ->
     <div className='classroom'>
       <h1>Welcome to { gon.classroom_name }</h1>
       <Toolbar />
       <ParchmentList />
-      <CodeEditor parchmentId={ @state.activeParchmentId } />
+      <CodeEditor parchmentId={ @state.activeParchmentId } parchmentPath={ @state.activeParchmentPath } />
       <OutputDisplay />
       <StatusBar />
     </div>
