@@ -8,14 +8,22 @@ class RunCodeJob < ApplicationJob
     ENV['CODE_RUNNER_URL'] :
     'localhost:9797'
 
-  def perform(classroom_id, code)
+  def perform(classroom_id)
     classroom = Classroom.find(classroom_id)
-    tmpfile = Tempfile.new(['code', '.' + classroom.language_extension])
-    tmpfile.write(code)
+
+    tmpfile = Tempfile.new(['code', '.zip'])
     tmpfile.close
 
+    ::Zip::File.open(tmpfile.path, ::Zip::File::CREATE) do |zip|
+      classroom.parchments.each do |p|
+        zip.get_output_stream(p.path) { |os| os.write(p.content) }
+      end
+    end
+
+    FileUtils.cp(tmpfile.path, '/tmp/output.zip')
+
     begin
-      response = RestClient.post(CODE_RUNNER_URL, code: File.new(tmpfile.path))
+      response = RestClient.post(CODE_RUNNER_URL, zip_file: File.new(tmpfile.path))
       result = JSON.parse(response.to_s)
       
       ActionCable.server.broadcast "classroom_#{classroom_id}", {

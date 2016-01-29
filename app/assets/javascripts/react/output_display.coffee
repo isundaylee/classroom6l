@@ -24,9 +24,12 @@
       @changeState content: @props.defaultContent
 
     App.classroom.onReceivingBroadcastOfType 'run_result', (data) =>
-      output = "The output of your code is: \n\n" + data.payload.stdout
-      output += "\nYour code generated the following error messages: \n\n" + data.payload.stderr if data.payload.stderr != ''
-      @appendContent output
+      if data.payload.success
+        output = "The output of your code is: \n\n" + data.payload.stdout
+        output += "\nYour code generated the following error messages: \n\n" + data.payload.stderr if data.payload.stderr != ''
+        @appendContent output
+      else
+        @appendContent "Error running your code: " + data.payload.error
 
   appendContent: (content) ->
     @setState (state) ->

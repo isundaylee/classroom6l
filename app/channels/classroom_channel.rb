@@ -17,7 +17,7 @@ class ClassroomChannel < ApplicationCable::Channel
 
   def run(data)
     @classroom.reload
-    RunCodeJob.perform_later(@classroom_id, @classroom.code)
+    RunCodeJob.perform_later(@classroom_id)
     transmitResponse data['seq'].to_i, true, {}
   end
 

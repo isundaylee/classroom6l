@@ -29,6 +29,7 @@ gem 'rest-client'
 
 gem 'rails_stdout_logging', github: 'MattWalston/rails_stdout_logging'
 gem 'underscore-rails'
+gem 'rubyzip', require: 'zip'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

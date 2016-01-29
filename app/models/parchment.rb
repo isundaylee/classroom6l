@@ -1,7 +1,7 @@
 class Parchment < ApplicationRecord
   belongs_to :classroom
 
-  validates :path, format: {with: /\A\/[a-z0-9._\-\/]*\z/i, message: 'can only contain alphanumerical characters, underscores, dots, and slashes. '}
+  validates :path, format: {with: /\A[a-z0-9._\-\/]*\z/i, message: 'can only contain alphanumerical characters, underscores, dots, and slashes. '}
 
   def apply_patch(patchText)
     self.with_lock do

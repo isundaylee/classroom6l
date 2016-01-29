@@ -12,10 +12,12 @@ class Classroom < ApplicationRecord
 
   DEFAULT_PARCHMENTS = {
     'ruby' => {
-      '/code.rb' => "puts 'Hello, world! '\n"
+      'makefile' => "run:\n\t@ruby code.rb",
+      'code.rb' => "puts 'Hello, world! '\n", 
     }, 
     'python' => {
-      '/code.py' => "print('Hello, world! ')\n"
+      'makefile' => "run:\n\t@python3 code.py",
+      'code.py' => "print('Hello, world! ')\n", 
     }
   }
 
@@ -27,8 +29,8 @@ class Classroom < ApplicationRecord
   after_save :save_code
   after_create :create_default_parchments
 
-  def code
-    parchments[0].content
+  def main_parchment
+    parchments.select { |p| p.path.downcase != 'makefile' }.first
   end
 
   def language_extension
