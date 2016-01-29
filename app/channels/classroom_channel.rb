@@ -1,93 +1,52 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in an EventMachine loop that does not support auto reloading.
 class ClassroomChannel < ApplicationCable::Channel
   def subscribed
-    classroom_id = params['classroom_id'].to_i
-    username = params['username'].strip
+    @classroom_id = params['classroom_id'].to_i
+    @classroom = Classroom.find(@classroom_id)
+    @client_id = params['client_id']
+    @username = params['username'].strip
 
-    stream_from "classroom_#{classroom_id}"
+    stream_from "classroom_#{@classroom_id}"
 
-    Classroom.find(classroom_id).attendance_add(username)
+    @classroom.attendance_add(@username)
   end
 
   def unsubscribed
-    classroom_id = params['classroom_id'].to_i
-    username = params['username'].strip
-
-    Classroom.find(classroom_id).attendance_remove(username)
+    @classroom.attendance_remove(@username)
   end
 
   def run(data)
-    classroom_id = params['classroom_id'].to_i
-    RunCodeJob.perform_later(classroom_id, Classroom.find(classroom_id).code)
+    RunCodeJob.perform_later(@classroom_id, @classroom.code)
   end
 
-  def submit_patches(data)
-    classroom_id = params['classroom_id'].to_i
-    client_id = params['client_id']
-    classroom = Classroom.find(classroom_id)
-
-    data['patches'].each do |patchText|
-      puts '[DBG] ' + patchText.inspect
-
-      result = {
-        type: 'submit_patch_result',
-        payload: {
-          client_id: client_id
-        }
-      }
-
-      success = classroom.apply_patch(patchText)
-
-      if success
-        result[:payload][:success] = true
-        result[:payload][:patch] = patchText
-      else
-        result[:payload][:success] = false
-      end
-
-      ActionCable.server.broadcast "classroom_#{classroom_id}", result
-    end
-  end
-
-  def revert(data)
-    classroom_id = params['classroom_id'].to_i
-    classroom = Classroom.find(classroom_id)
-    client_id = params['client_id']
-
-    ActionCable.server.broadcast "classroom_#{classroom_id}", {
-      type: 'revert_result',
-      payload: {
-        code: classroom.code
-      }
-    }
+  def sync(data)
+    transmitResponse data['seq'].to_i, true, content: @classroom.code
   end
 
   def query_attendance(data)
-    classroom_id = params['classroom_id'].to_i
-    classroom = Classroom.find(classroom_id)
-    client_id = params['client_id']
-    seq = data['seq'].to_i
-
-    ActionCable.server.broadcast "classroom_#{classroom_id}", {
-      success: true, 
-      client_id: client_id, 
-      seq: seq, 
-      payload: {
-        attendance: classroom.attendance_get
-      }
-    }
+    transmitResponse data['seq'].to_i, true, attendance: @classroom.attendance_get
   end
 
   def ping(data)
-    classroom_id = params['classroom_id'].to_i
-    client_id = params['client_id']
-    seq = data['seq'].to_i
-
-    ActionCable.server.broadcast "classroom_#{classroom_id}", {
-      success: true, 
-      client_id: client_id, 
-      seq: seq, 
-      payload: {}
-    }
+    transmitResponse data['seq'].to_i, true, {}
   end
+
+  def submit_patch(data)
+    puts 'Processing patch ' + data['patch'].lines.join("\\n")
+    if @classroom.apply_patch(data['patch'])
+      transmitResponse data['seq'].to_i, true, {}
+      broadcast 'patch', author: @client_id, patch: data['patch']
+    else
+      transmitResponse data['seq'].to_i, false, {}
+    end
+  end
+
+  private
+    def transmitResponse(seq, success, payload)
+      transmit success: success, seq: seq, payload: payload
+    end
+
+    def broadcast(type, payload)
+      ActionCable.server.broadcast "classroom_#{@classroom_id}", {type: type, payload: payload}
+    end
 end

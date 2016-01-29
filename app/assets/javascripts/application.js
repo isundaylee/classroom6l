@@ -10,14 +10,15 @@
 //= require action_cable
 //= require react
 //= require react_ujs
+//= require react-ace-wrapper
 
 //= require init
 //= require utilities
-//= require app/code_editor
 //= require app/output_display
 //= require app/toolbar
 //= require app/data_store
 //= require app/cable_request
+//= require react/code_editor
 //= require react/status_bar
 //= require channels/classroom
 

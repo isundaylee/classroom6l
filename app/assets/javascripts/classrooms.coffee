@@ -5,6 +5,5 @@
 $(document).on 'page:change', ->
   if $('body#classrooms_show').length > 0
     # Set up the editor and output display
-    App.codeEditor = new App.CodeEditor 'editor'
     App.outputDisplay = new App.OutputDisplay 'output'
     App.toolbar = new App.Toolbar 'toolbar'
