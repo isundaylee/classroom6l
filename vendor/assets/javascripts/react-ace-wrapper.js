@@ -16,7 +16,8 @@ this.AceEditor = React.createClass({
         highlightActiveLine: React.PropTypes.bool,
         showPrintMargin: React.PropTypes.bool,
         selectFirstLine: React.PropTypes.bool,
-        wrapEnabled: React.PropTypes.bool
+        wrapEnabled: React.PropTypes.bool, 
+        alwaysShowEnd: React.PropTypes.bool
     },
     getDefaultProps() {
         return {
@@ -36,7 +37,8 @@ this.AceEditor = React.createClass({
             highlightActiveLine: true,
             showPrintMargin: true,
             selectFirstLine: false,
-            wrapEnabled: false
+            wrapEnabled: false,
+            alwaysShowEnd: false
         };
     },
     onChange() {
@@ -98,12 +100,22 @@ this.AceEditor = React.createClass({
             if(currentRange && typeof currentRange === "object") {
                 this.editor.getSession().getSelection().setSelectionRange(currentRange);
             }
+            if(this.props.alwaysShowEnd) {
+                this.showEnd(); 
+            }
         }
         if (nextProps.showGutter !== this.props.showGutter) {
             this.editor.renderer.setShowGutter(nextProps.showGutter);
         }
+        if (nextProps.alwaysShowEnd !== this.props.alwaysShowEnd) {
+            this.alwaysShowEnd();
+        }
     },
-
+    showEnd() {
+        var lineNumber = this.editor.getSession().getLength() - 1; 
+        this.editor.scrollToLine(lineNumber, true, true, function() {}); 
+        this.editor.gotoLine(lineNumber, 0, true); 
+    },
     render() {
         var divStyle = {
             width: this.props.width,

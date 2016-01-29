@@ -40,7 +40,8 @@
                width='' 
               height='' 
                value={ @state.content } 
-            readOnly=true />
+            readOnly=true
+       alwaysShowEnd=true />
 
   # Utility boilerplate
 
