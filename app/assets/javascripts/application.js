@@ -23,4 +23,3 @@
 //= require channels/classroom
 
 //= require pages
-//= require classrooms

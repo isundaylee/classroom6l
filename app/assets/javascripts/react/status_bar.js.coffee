@@ -5,8 +5,8 @@
 
   getInitialState: ->
     ping: null
-    lang: 'ruby'
-    language: 'Ruby'
+    lang: gon.lang
+    language: gon.language
     attendance: []
 
   componentDidMount: ->
