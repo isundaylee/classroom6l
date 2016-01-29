@@ -42,7 +42,7 @@
     unless @silenceTriggerTimeout
       @silenceTriggerTimeout = setTimeout =>
         @silenceTrigger()
-      , 500
+      , 250
 
   silenceTrigger: ->
     @silenceTriggerTimeout = null
