@@ -25,7 +25,7 @@
 
     App.classroom.onReceivingBroadcastOfType 'run_result', (data) =>
       output = "The output of your code is: \n\n" + data.payload.stdout
-      output += "\n Your code generated the following error messages: \n\n" + data.payload.stderr if data.payload.stderr != ''
+      output += "\nYour code generated the following error messages: \n\n" + data.payload.stderr if data.payload.stderr != ''
       @appendContent output
 
   appendContent: (content) ->
