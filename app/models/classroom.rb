@@ -10,25 +10,25 @@ class Classroom < ApplicationRecord
     }
   }
 
-  has_many :codes
+  DEFAULT_PARCHMENTS = {
+    'ruby' => {
+      '/code.rb' => "puts 'Hello, world! '\n"
+    }, 
+    'python' => {
+      '/code.py' => "print('Hello, world! ')\n"
+    }
+  }
+
+  has_many :parchments
 
   validates :name, presence: true, length: {minimum: 1, maximum: 100}
   validates :language, inclusion: SUPPORTED_LANGUAGES.keys
 
   after_save :save_code
+  after_create :create_default_parchments
 
   def code
-    if @code.present?
-      return @code
-    else
-      return codes.any? ?
-        codes.order('updated_at DESC').first.content :
-        ''
-    end
-  end
-
-  def code=(content)
-    @code = content
+    parchments[0].content
   end
 
   def language_extension
@@ -51,21 +51,6 @@ class Classroom < ApplicationRecord
     $redis.smembers(attendance_redis_key)
   end
 
-  def apply_patch(patchText)
-    self.with_lock do
-      dmp = DiffMatchPatch.new
-      patches = dmp.patch_fromText(patchText)
-      new_code, success = dmp.patch_apply(patches, self.code)
-
-      if success.all?
-        self.code = new_code
-        self.save!
-      end
-
-      return success.all?
-    end
-  end
-
   private
     def attendance_redis_key
       "attendance_#{self.id}"
@@ -78,5 +63,11 @@ class Classroom < ApplicationRecord
 
     def language_profile
       SUPPORTED_LANGUAGES[self.language]
+    end
+
+    def create_default_parchments
+      DEFAULT_PARCHMENTS[self.language].each do |k, v|
+        self.parchments.create!(path: k, content: v)
+      end
     end
 end

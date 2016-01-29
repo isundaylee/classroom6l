@@ -1,6 +1,9 @@
 @CodeEditor = React.createClass
   displayName: 'CodeEditor'
 
+  propTypes:
+    parchmentId: React.PropTypes.number
+
   getInitialState: ->
     code: ''
     readOnly: false
@@ -9,11 +12,12 @@
   componentDidMount: ->
     @dmp = new diff_match_patch
     @queuedPatches = []
+    @channel = App.createParchmentChannel(@props.parchmentId)
 
-    App.classroom.onConnect =>
+    @channel.onConnect =>
       @syncCode()
 
-    App.classroom.onReceivingBroadcastOfType 'patch', (data) =>
+    @channel.onReceivingBroadcastOfType 'patch', (data) =>
       @queuedPatches.push(data.payload.patch) unless data.payload.author == gon.client_id
       @armSilenceTrigger()
 
@@ -22,7 +26,7 @@
   syncCode: ->
     @changeState readOnly: true
 
-    App.classroom.sync().onSuccess (data) =>
+    @channel.sync().onSuccess (data) =>
       @changeState ignoreChanges: true
       @submittedCode = data.content
       @changeState code: data.content
@@ -59,7 +63,7 @@
       @syncCode()
 
     @submittedCode = @state.code
-    App.classroom.submitPatch(patchText).onError(onFailure).onTimeout(onFailure).send()
+    @channel.submitPatch(patchText).onError(onFailure).onTimeout(onFailure).send()
 
   applyQueuedPatches: ->
     for patch in @queuedPatches

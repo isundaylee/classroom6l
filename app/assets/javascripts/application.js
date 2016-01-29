@@ -17,11 +17,13 @@
 //= require app/pub_sub
 //= require app/data_store
 //= require app/cable_request
+//= require app/cable_request_manager
 //= require react/classroom
 //= require react/toolbar
 //= require react/code_editor
 //= require react/output_display
 //= require react/status_bar
 //= require channels/classroom
+//= require channels/parchment
 
 //= require pages

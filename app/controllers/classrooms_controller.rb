@@ -6,6 +6,7 @@ class ClassroomsController < ApplicationController
     gon.lang = @classroom.language
     gon.language = @classroom.language_name
     gon.classroom_name = @classroom.name
+    gon.main_parchment_id = @classroom.parchments[0].id
   end
 
   def create

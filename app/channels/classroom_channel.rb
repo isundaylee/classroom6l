@@ -16,12 +16,9 @@ class ClassroomChannel < ApplicationCable::Channel
   end
 
   def run(data)
+    @classroom.reload
     RunCodeJob.perform_later(@classroom_id, @classroom.code)
     transmitResponse data['seq'].to_i, true, {}
-  end
-
-  def sync(data)
-    transmitResponse data['seq'].to_i, true, content: @classroom.code
   end
 
   def query_attendance(data)
@@ -32,22 +29,8 @@ class ClassroomChannel < ApplicationCable::Channel
     transmitResponse data['seq'].to_i, true, {}
   end
 
-  def submit_patch(data)
-    puts 'Processing patch ' + data['patch'].lines.join("\\n")
-    if @classroom.apply_patch(data['patch'])
-      transmitResponse data['seq'].to_i, true, {}
-      broadcast 'patch', author: @client_id, patch: data['patch']
-    else
-      transmitResponse data['seq'].to_i, false, {}
-    end
-  end
-
   private
-    def transmitResponse(seq, success, payload)
-      transmit success: success, seq: seq, payload: payload
-    end
-
-    def broadcast(type, payload)
-      ActionCable.server.broadcast "classroom_#{@classroom_id}", {type: type, payload: payload}
+    def broadcast_channel
+      "classroom_#{@classroom_id}"
     end
 end
