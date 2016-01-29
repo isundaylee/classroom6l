@@ -35,6 +35,7 @@
 
   render: ->
     <AceEditor theme="monokai" 
+                mode="plain_text"
                 name="output_display" 
                width='' 
               height='' 
