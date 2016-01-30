@@ -40,12 +40,43 @@ body#classrooms_show
       display: inline-block
       width: 30px
 
-  #code_editor
+  .code-editor
     position: absolute
     top: 60px
     left: 20%
     right: 40%
     bottom: 43px
+
+    #code_editor
+      position: absolute
+      top: 0
+      bottom: 20px
+      left: 0
+      right: 0
+
+    .current-parchments
+      position: absolute
+      background-color: #2F3129
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
+      font-size: 12px
+      margin: 0
+      padding: 0
+      padding-left: 41px
+      color: white
+      bottom: 0px
+      height: 24px
+      left: 0
+      right: 0
+      list-style-type: none
+
+      li
+        padding: 0 10px
+        display: inline-block
+        height: 24px
+        line-height: 24px
+
+        &.active
+          background-color: #272822
 
   #output_display
     position: absolute
@@ -74,6 +105,7 @@ body#classrooms_show
       &:hover, &.active
         background-color: #2F3129
 
+  
   .status-bar
     position: absolute
     height: 37px

@@ -99,15 +99,20 @@
   # React rendering logic
 
   render: ->
-    <AceEditor mode={ @state.editorMode } 
-              theme="monokai" 
-               name="code_editor" 
-              width='' 
-             height='' 
-           onChange={ @onCodeChange } 
-              value={ @state.code } 
-           readOnly={ @state.readOnly }
-        wrapEnabled=true />
+    <div className='code-editor'>
+      <AceEditor mode={ @state.editorMode } 
+                theme="monokai" 
+                 name="code_editor" 
+                width='' 
+               height='' 
+             onChange={ @onCodeChange } 
+                value={ @state.code } 
+             readOnly={ @state.readOnly }
+          wrapEnabled=true />
+      <ul className="current-parchments">
+        <li className="active">{ @props.parchmentPath }</li>
+      </ul>
+    </div>
 
   # Utility boilerplate
 
