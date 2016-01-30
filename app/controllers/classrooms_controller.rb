@@ -3,8 +3,6 @@ class ClassroomsController < ApplicationController
     @classroom = Classroom.find(params[:id])
     gon.classroom_id = @classroom.id
     gon.client_id = SecureRandom.uuid
-    gon.lang = @classroom.language
-    gon.language = @classroom.language_name
     gon.classroom_name = @classroom.name
     gon.main_parchment_id = @classroom.main_parchment.id
     gon.main_parchment_path = @classroom.main_parchment.path
@@ -12,11 +10,12 @@ class ClassroomsController < ApplicationController
 
   def create
     room = Classroom.create!(classroom_params)
+    room.build_template!(params[:template])
     redirect_to room
   end
 
   private
     def classroom_params
-      params.require(:classroom).permit(:language, :name)
+      params.require(:classroom).permit(:name)
     end
 end

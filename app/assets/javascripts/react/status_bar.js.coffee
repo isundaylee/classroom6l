@@ -5,8 +5,6 @@
 
   getInitialState: ->
     ping: null
-    lang: gon.lang
-    language: gon.language
     attendance: []
 
   componentDidMount: ->
@@ -46,6 +44,5 @@
             <li key={ person }>{ person }</li>
         }
       </ul>
-      <span className={"language " + @state.lang}>{ @state.language }</span>
       <span className="ping">{ @state.ping || "???" } ms</span>
     </div>

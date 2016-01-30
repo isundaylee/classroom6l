@@ -2,9 +2,9 @@
 <h1>Classroom 6.L</h1>
 <div id="overlay"></div>
 
-<%= form_for Classroom.new(name: 'A New Classroom', language: 'python') do |f| %>
+<%= form_for Classroom.new(name: 'A New Classroom') do |f| %>
   <%= f.text_field :name %>
-  <%= f.hidden_field :language %>
+  <%= hidden_field_tag :template %>
   <div id="python">Python</div>
   <div id="ruby">Ruby</div>
 <% end %>
