@@ -7,6 +7,10 @@ class Classroom < ApplicationRecord
     'python' => {
       name: 'Python',
       extension: 'py'
+    }, 
+    'java' => {
+      name: 'Java', 
+      extension: 'java'
     }
   }
 
@@ -18,6 +22,16 @@ class Classroom < ApplicationRecord
     'python' => {
       'makefile' => "run:\n\t@python3 code.py",
       'code.py' => "print('Hello, world! ')\n", 
+    }, 
+    'java' => {
+      'makefile' =>"run:\n\t@javac Code.java\n\t@java Code", 
+      'code.java' => <<-eos
+public class Code {
+    public static void main(String args[]) {
+        System.out.println("Hello, world! ");
+    }
+}
+      eos
     }
   }
 
