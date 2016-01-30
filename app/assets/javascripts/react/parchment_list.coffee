@@ -18,6 +18,9 @@
     App.PubSub.subscribe 'didSwitchToParchment', (data) =>
       @changeState activeParchmentId: data.parchmentId
 
+    App.PubSub.subscribe 'refreshParchmentList', =>
+      @updateParchments()
+
   updateParchments: ->
     App.classroom.listParchments().onSuccess (data) =>
       @changeState parchments: data.parchments

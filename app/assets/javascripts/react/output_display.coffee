@@ -16,6 +16,9 @@
     @clearSubToken = App.PubSub.subscribe 'clearOutputDisplay', =>
       @changeState content: @props.defaultContent
 
+    App.PubSub.subscribe 'appendOutput', (data) =>
+      @appendContent data.content
+
   componentWillUnmount: ->
     App.PubSub.unsubscribe 'clearOutputDisplay', @clearSubToken
 

@@ -10,6 +10,9 @@ App.classroom = App.cable.subscriptions.create {channel: "ClassroomChannel", cla
 
   listParchments: ->
     new App.CableRequest(this, 'list_parchments')
+
+  newParchment: (path) ->
+    new App.CableRequest(this, 'new_parchment', path: path)
     
 _.extend(App.classroom, App.CableRequestManager)
 App.classroom.setup()

@@ -36,6 +36,17 @@ class ClassroomChannel < ApplicationCable::Channel
     transmitResponse data['seq'].to_i, true, parchments: parchments
   end
 
+  def new_parchment(data)
+    @classroom.reload
+    parchment = @classroom.parchments.new(path: data['path'], content: '')
+
+    if parchment.save
+      transmitResponse data['seq'].to_i, true, {}
+    else
+      transmitResponse data['seq'].to_i, false, error: parchment.errors.full_messages.join("\n")
+    end
+  end
+
   private
     def broadcast_channel
       "classroom_#{@classroom_id}"
