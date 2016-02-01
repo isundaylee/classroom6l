@@ -23,6 +23,7 @@
   onRun: ->
     @changeState running: true
     App.classroom.run().send()
+    App.PubSub.publish 'appendOutput', content: 'Running your code... '
 
   onClear: ->
     App.PubSub.publish 'clearOutputDisplay', {}
