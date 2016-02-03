@@ -12,7 +12,7 @@ class Classroom < ApplicationRecord
     }, 
     'java' => {
       'makefile' =>"run:\n\t@javac Code.java\n\t@java Code", 
-      'code.java' => <<-eos
+      'Code.java' => <<-eos
 public class Code {
     public static void main(String args[]) {
         System.out.println("Hello, world! ");
