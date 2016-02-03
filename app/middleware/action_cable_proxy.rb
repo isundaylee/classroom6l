@@ -3,7 +3,7 @@ require 'faye/websocket'
 class ActionCableProxy
   def initialize(app, options={})
     @app = app
-    ActionCable.server.config.allowed_request_origins = ['http://6l.jiahao.link']
+    ActionCable.server.config.allowed_request_origins = [ENV['ACTIONCABLE_URL'].gsub('ws:', 'http:')] unless ENV['ACTIONCABLE_URL'].nil?
   end
 
   def call(env)
