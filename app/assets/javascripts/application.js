@@ -8,6 +8,7 @@
 //= require ace/mode-java
 //= require ace/mode-plain_text
 //= require ace/mode-xml
+//= require ace/mode-makefile
 //= require ace/ext-modelist
 //= require diff_match_patch
 //= require underscore
