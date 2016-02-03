@@ -5,6 +5,9 @@
 //= require ace/theme-monokai
 //= require ace/mode-python
 //= require ace/mode-ruby
+//= require ace/mode-java
+//= require ace/mode-plain_text
+//= require ace/mode-xml
 //= require ace/ext-modelist
 //= require diff_match_patch
 //= require underscore
