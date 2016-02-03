@@ -31,9 +31,9 @@
       {
         _.map @state.parchments, (path, id) =>
           id = parseInt(id)
-          <li onDoubleClick={ @editParchment.bind(this, id, path) }
-                        key={ id } 
-                  className={ if @state.activeParchmentId == id then 'active' else '' }>
+          <li onClick={ @editParchment.bind(this, id, path) }
+                  key={ id } 
+            className={ if @state.activeParchmentId == id then 'active' else '' }>
             { path }
           </li>
       }
