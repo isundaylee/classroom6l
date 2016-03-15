@@ -1,0 +1,178 @@
+body#pages_homepage {
+  background: url("http://ljh.me/index.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  z-index: -100; }
+  body#pages_homepage #overlay {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #000;
+    opacity: 0.8; }
+  body#pages_homepage #devil {
+    height: 30vh;
+    display: block;
+    margin: 10vh auto 5vh; }
+  body#pages_homepage h1 {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 300;
+    font-size: 12vh;
+    margin: 0;
+    text-align: center;
+    color: white; }
+  body#pages_homepage form {
+    width: 800px;
+    display: block;
+    margin: 8vh auto; }
+    body#pages_homepage form input {
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 300;
+      font-size: 3vh;
+      background-color: #EEE;
+      width: 54%;
+      padding: 0.8vh 3%;
+      border: none; }
+    body#pages_homepage form div {
+      display: inline-block;
+      width: 13%;
+      color: white;
+      font-family: "Source Sans Pro", sans-serif;
+      font-weight: 300;
+      font-size: 3vh;
+      padding: 0.8vh 3%;
+      text-align: center;
+      border: none; }
+    body#pages_homepage form #python {
+      background-color: #009900; }
+    body#pages_homepage form #ruby {
+      background-color: #0066ff; }
+
+body#classrooms_show h1 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 30px;
+  padding: 12px;
+  margin: 0;
+  width: 100%;
+  color: white;
+  background-color: #272822;
+  border-bottom: 6px solid #2F3129;
+  text-align: right;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 300;
+  font-size: 18px; }
+body#classrooms_show .toolbar {
+  position: absolute;
+  top: 13px;
+  left: 20px; }
+  body#classrooms_show .toolbar div {
+    height: 20px;
+    background-color: #2F3129;
+    color: white;
+    font-family: "Source Sans Pro", sans-serif;
+    padding: 5px 15px;
+    margin: 0 5px;
+    font-weight: 300;
+    display: inline-block; }
+    body#classrooms_show .toolbar div:first-child {
+      margin-left: 0; }
+    body#classrooms_show .toolbar div:hover {
+      background-color: #2a2b24; }
+  body#classrooms_show .toolbar span.divider {
+    display: inline-block;
+    width: 30px; }
+body#classrooms_show .code-editor {
+  position: absolute;
+  top: 60px;
+  left: 20%;
+  right: 40%;
+  bottom: 43px; }
+  body#classrooms_show .code-editor #code_editor {
+    position: absolute;
+    top: 0;
+    bottom: 20px;
+    left: 0;
+    right: 0; }
+  body#classrooms_show .code-editor .current-parchments {
+    position: absolute;
+    background-color: #2F3129;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    padding-left: 41px;
+    color: white;
+    bottom: 0px;
+    height: 24px;
+    left: 0;
+    right: 0;
+    list-style-type: none; }
+    body#classrooms_show .code-editor .current-parchments li {
+      padding: 0 10px;
+      display: inline-block;
+      height: 24px;
+      line-height: 24px; }
+      body#classrooms_show .code-editor .current-parchments li.active {
+        background-color: #272822; }
+body#classrooms_show #output_display {
+  position: absolute;
+  top: 60px;
+  left: 60%;
+  right: 0;
+  bottom: 43px; }
+body#classrooms_show .parchment-list {
+  position: absolute;
+  top: 60px;
+  bottom: 43px;
+  left: 0;
+  right: 80%;
+  margin: 0;
+  background-color: #272822;
+  list-style-type: none;
+  padding: 16px 0; }
+  body#classrooms_show .parchment-list li {
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
+    font-size: 12px;
+    color: white;
+    padding: 0 10px; }
+    body#classrooms_show .parchment-list li:hover, body#classrooms_show .parchment-list li.active {
+      background-color: #2F3129; }
+body#classrooms_show .status-bar {
+  position: absolute;
+  height: 37px;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  border-top: 6px solid #2F3129;
+  background-color: #272822; }
+  body#classrooms_show .status-bar .attendance {
+    float: left;
+    margin: 0;
+    padding: 0;
+    margin-left: 10px; }
+    body#classrooms_show .status-bar .attendance li {
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: white;
+      display: inline-block;
+      padding: 2px 10px;
+      margin: 7px 3px;
+      background-color: #106AC4; }
+      body#classrooms_show .status-bar .attendance li:first-child {
+        margin-left: 0; }
+  body#classrooms_show .status-bar .ping {
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+    display: inline-block;
+    padding: 2px 10px;
+    margin: 7px 3px;
+    float: right; }
