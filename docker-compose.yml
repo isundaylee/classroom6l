@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - ".:/usr/src/app"
+    command: bundle exec rails server -b 0.0.0.0
+    environment:
+      - MBTA_API_KEY

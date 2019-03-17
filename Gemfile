@@ -27,7 +27,6 @@ gem 'sass'
 gem 'gon'
 gem 'rest-client'
 
-gem 'rails_stdout_logging', github: 'MattWalston/rails_stdout_logging'
 gem 'underscore-rails'
 gem 'rubyzip', require: 'zip'
 
@@ -41,8 +40,6 @@ gem 'diff_match_patch'
 
 gem 'react-rails'
 gem 'sprockets-coffee-react'
-
-gem 'rails_12factor'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
